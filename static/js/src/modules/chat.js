@@ -11,7 +11,7 @@
 		var doms = {
 			agentStatusText: utils.$Class('span.em-header-status-text')[0],
 			agentStatusSymbol: utils.$Dom('em-widgetAgentStatus'),
-			nickName: utils.$Class('span.em-widgetHeader-nickname')[0],
+			nickname: document.querySelector('.em-widgetHeader-nickname'),
 		};
 
 		easemobim.doms = doms;
@@ -375,11 +375,22 @@
 				return null;
 			}
 			, startToGetAgentStatus: function () {
+				var me = this;
+
+				if ( config.agentStatusTimer ) return;
+
+				// start to poll
+				config.agentStatusTimer = setInterval(function() {
+					me.updateAgentStatus();
+				}, 5000);
 			}
 			, stopGettingAgentStatus: function () {
+				config.agentStatusTimer = clearInterval(config.agentStatusTimer);
 			}
 			, clearAgentStatus: function () {
-				doms.agentStatusSymbol.className = 'em-hide';
+				// benz patch:
+				// block status symbol
+				// doms.agentStatusSymbol.className = 'em-hide';
 				doms.agentStatusText.innerText = '';
 			}
 			, updateAgentStatus: function () {
@@ -404,15 +415,48 @@
 					if ( msg && msg.data && msg.data.state ) {
 						state = msg.data.state;
 						doms.agentStatusText.innerText = _const.agentStatusText[state];
-						doms.agentStatusSymbol.className = 'em-widget-agent-status ' + _const.agentStatusClassName[state];
+						// benz patch:
+						// block status symbol
+						// doms.agentStatusSymbol.className = 'em-widget-agent-status ' + _const.agentStatusClassName[state];
 					}
 				});
+			}
+			, setAgentProfile: function ( info ) {
+
+				// benz patch:
+				// 企业logo 和 企业昵称直接用一张图片
+				// 坐席昵称 和 头像保持不变
+				var avatarImg = info.avatar
+					? utils.getAvatarsFullPath(info.avatar, config.domain)
+					: config.tenantAvatar || config.defaultAvatar;
+
+				//更新企业头像和名称
+				if (info.tenantName) {
+					utils.removeClass(document.querySelector('.benz-logo-with-text'), 'hide');
+					utils.addClass(easemobim.avatar, 'hide');
+					utils.addClass(doms.nickname, 'hide');
+					utils.addClass(doms.agentStatusText, 'hide');
+				}
+				else if (
+					info.userNickname
+					&& config.nickNameOption
+					&& '调度员' !== info.userNickname
+				){
+					utils.addClass(document.querySelector('.benz-logo-with-text'), 'hide');
+					utils.removeClass(easemobim.avatar, 'hide');
+					utils.removeClass(doms.nickname, 'hide');
+					utils.removeClass(doms.agentStatusText, 'hide');
+					doms.nickname.innerText = info.userNickname;
+					this.currentAvatar = avatarImg;
+					avatarImg && easemobim.avatar.setAttribute('src', avatarImg);
+				}
+				else {}
 			}
 			, setLogo: function () {
 				// 为了保证消息插入位置正确
 				if (config.logo) {
-					this.chatWrapper.querySelector('.em-widget-tenant-logo').style.display = 'block';
-					this.chatWrapper.querySelector('.em-widget-tenant-logo img').src = config.logo;
+					utils.removeClass(document.querySelector('.em-widget-tenant-logo'), 'hide');
+					document.querySelector('.em-widget-tenant-logo img').src = config.logo;
 				}
 			}
 			, setNotice: function () {
@@ -946,6 +990,10 @@
 						this.startToGetAgentStatus();
 					}
 
+					this.setAgentProfile({
+						userNickname: info.userNickname,
+						avatar: info.avatar
+					});
 				} else if ( action === 'create' ) {//显示会话创建
 					this.appendEventMsg(_const.eventMessageText.CREATE);
 				} else if ( action === 'close' ) {//显示会话关闭
@@ -969,9 +1017,14 @@
 
 				config.agentUserId = info.userId;
 
-				// this.updateAgentStatus();
+				this.updateAgentStatus();
 				this.startToGetAgentStatus();
 
+				//更新头像和昵称
+				this.setAgentProfile({
+					userNickname: info.agentUserNiceName,
+					avatar: info.avatar
+				});
 			}
 			//转接中排队中等提示上屏
 			, appendEventMsg: function (msg) {
