@@ -97,18 +97,18 @@ easemobim.liveStreaming = (function(){
 
 	function autoResize(width, height){
 		var LIMIT = {
-			width: 280,
-			height: 300
+			width: 240,
+			height: 240
 		};
 
 		var targetAspectRadio = width / height;
 		var currentAspectRadio = LIMIT.width / LIMIT.height;
 
 		if (currentAspectRadio > targetAspectRadio){
-			videoWrapper.style.width = Math.floor(LIMIT.height * targetAspectRadio) + 'px';
+			video.style.width = Math.floor(LIMIT.height * targetAspectRadio) + 'px';
 		}
 		else {
-			videoWrapper.style.height = Math.floor(LIMIT.width / targetAspectRadio) + 'px';
+			video.style.height = Math.floor(LIMIT.width / targetAspectRadio) + 'px';
 		}
 
 	}

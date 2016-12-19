@@ -142,28 +142,25 @@
 	z-index: 3;
 	top: 60px;
 	right: 20px;
-	width: 200px;
-	height: 300px;
 	video {
-		width: 100%;
-		height: 100%;
+		width: 135px;
+		height: 240px;
 	}
-	.ctrl-panel {
-		position: absolute;
-		right: 10px;
-		top: 10px;
+	.status-panel {
+		padding: 0 10px;
+		line-height: 35px;
+		min-width: 135px;
+		box-sizing: border-box;
+		vertical-align: middle;
+		background-color: #333;
+		color: white;
 		.btn-exit {
+			float: right;
 			color: white;
 			&:before {
 				font-size: 20px;
 			}
 		}
-	}
-	.status-panel {
-		position: absolute;
-		left: 10px;
-		top: 10px;
-		color: white;
 		.playing {
 			display: none;
 		}

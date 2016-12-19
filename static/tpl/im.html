@@ -159,22 +159,22 @@
 
 	<!-- 图片查看 -->
 	<div class="img-view hide">
-		<img src="">
+		<img class="show-all" src="">
 	</div>
 
 	<div class="em-live-streaming-wrapper hide">
-		<video webkit-playsinline playsinline controls></video>
 		<div class="status-panel">
 			<p>
-				<span class="text playing">实时视频进行中</span>
-				<span class="text stopped">实时视频已关闭</span>
+				<span class="text playing">实时进行中</span>
+				<span class="text stopped">视频已结束</span>
 				<span class="symbol icon-circle"></span>
+				<span class="btn-exit icon-exit"></span>
 			</p>
-			<p class="time">00:00</p>
+			<p class="time hide">00:00</p>
 		</div>
-		<div class="ctrl-panel">
-			<span class="btn-exit icon-exit"></span>
-		</div>
+		<!-- <div class="ctrl-panel"> -->
+		<!-- </div> -->
+		<video webkit-playsinline playsinline controls></video>
 	</div>
 
 	<!-- 用于跨域请求的iframe -->
