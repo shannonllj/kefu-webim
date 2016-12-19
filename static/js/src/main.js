@@ -78,13 +78,14 @@
 				<div id='easemobWidgetHeader' class='easemobWidgetHeader-wrapper bg-color border-color'>\
 					<div id='easemobWidgetDrag'>\
 						" + (utils.isMobile || utils.root ? "" : "<p></p>") + "\
-						<img class='easemobWidgetHeader-portrait border-color' src='static/img/logo.png'/>\
-						<img src='static/img/logo-text.png' style='\
-    height: 20px;\
-    vertical-align: middle;\
-    position: relative;\
-    left: 10px;\
-'><span class='easemobWidgetHeader-nickname em-hide'></span>\
+						<img class='easemobWidgetHeader-portrait border-color' style='display: none;' src='static/img/logo.png'/>\
+						<img src='static/img/logo-with-text.png' style='\
+    height: 41px;\
+    position: absolute;\
+    left: 0;\
+    top: 0;\
+    z-index: 1000;\
+'><span class='easemobWidgetHeader-nickname em-hide' style='display: none;'></span>\
                         <i id='easemobWidgetNotem' class='easemobWidget-notem em-hide'></i>\
 					</div>\
 				</div>\
