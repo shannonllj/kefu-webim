@@ -1,5 +1,4 @@
-;
-(function(window, undefined) {
+;(function(window, undefined) {
 	'use strict';
 
 	var utils = easemobim.utils;
@@ -7,13 +6,14 @@
 	var eventCollector = easemobim.eventCollector;
 	var chat;
 	var afterChatReady;
+	var config;
 
 	getConfig();
 
 	function getConfig() {
 		if (utils.isTop) {
 			var tenantId = utils.query('tenantId');
-			var config = {};
+			config = {};
 			//get config from referrer's config
 			try {
 				config = JSON.parse(utils.code.decode(utils.getStore('emconfig' + tenantId)));
@@ -76,7 +76,15 @@
 			window.transfer = new easemobim.Transfer(null, 'main').listen(function(msg) {
 				switch (msg.event) {
 					case easemobim.EVENTS.SHOW.event:
-						chatEntry.open();
+						if(eventCollector.isStarted()){
+							// 停止上报访客
+							eventCollector.stopReporting();
+							chatEntry.init(config);
+							chatEntry.open();
+						}
+						else{
+							chatEntry.open();
+						}
 						break;
 					case easemobim.EVENTS.CLOSE.event:
 						chatEntry.close();
@@ -94,6 +102,8 @@
 						chat = easemobim.chat(msg.data);
 						window.transfer.to = msg.data.parentId;
 						initUI(msg.data, initAfterUI);
+						// cache config
+						config = msg.data;
 						break;
 					default:
 						break;
@@ -117,7 +127,11 @@
 			eventCollector.startToReport(config, function(targetUserInfo) {
 				chatEntry.init(config, targetUserInfo);
 			});
-			// config.hide = true;
+			// 增加访客主动联系客服逻辑
+			utils.one(easemobim.imBtn, 'click', function(){
+				chatEntry.init(config);
+				chatEntry.open();
+			});
 		}
 		else {
 			// 获取关联，创建访客，调用聊天窗口
@@ -144,21 +158,15 @@
 		// em-kefu-webim-chat
 		utils.toggleClass(
 			utils.$Dom('em-kefu-webim-chat'),
-			'em-hide', !(utils.isTop || !config.minimum)
+			'em-hide',
+			!(utils.isTop || !config.minimum)
 		);
 
-		// 联系客服按钮
-		var $button = utils.$Class('a.em-widget-pop-bar')[0];
+		// 设置联系客服按钮文字
+		document.querySelector('.em-widget-pop-bar').innerText = config.buttonText;
 
-		// 设置按钮文字
-		$button.innerText = config.buttonText;
-
-		// mobile
+		// 添加移动端样式类
 		if (utils.isMobile) {
-			// 联系客服按钮改为弹窗
-			$button.href = location.href;
-			$button.target = '_blank';
-			// 添加移动端样式类
 			utils.addClass(document.body, 'em-mobile');
 		}
 
@@ -247,7 +255,6 @@
 				config.channelid = config.channelid || msg.data[0].channelId;
 				config.appKey = config.appKey || config.orgName + '#' + config.appName;
 				config.restServer = config.restServer || msg.data[0].restDomain;
-
 				var cluster = config.restServer ? config.restServer.match(/vip\d/) : '';
 				cluster = cluster && cluster.length ? '-' + cluster[0] : '';
 				config.xmppServer = config.xmppServer || 'im-api' + cluster + '.easemob.com';
@@ -264,10 +271,10 @@
 							password: targetUserInfo.userPassword
 						};
 
+						// 发送空的ext消息，延迟发送
+						chat.cachedCommandMessage = {ext: {weichat: {agentUsername: targetUserInfo.agentUserName}}};
 						chat.ready();
 						chat.show();
-						// 发送空的ext消息
-						chat.sendTextMsg('', false, {ext: {weichat: {agentUsername: targetUserInfo.agentUserName}}});
 						transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
 						transfer.send({
 							event: 'setUser',
@@ -288,10 +295,10 @@
 							} else {
 								config.user.password = msg.data;
 
+								// 发送空的ext消息，延迟发送
+								chat.cachedCommandMessage = {ext: {weichat: {agentUsername: targetUserInfo.agentUserName}}};
 								chat.ready();
 								chat.show();
-								// 发送空的ext消息
-								chat.sendTextMsg('', false, {ext: {weichat: {agentUsername: targetUserInfo.agentUserName}}});
 								transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
 							}
 						});
@@ -386,15 +393,10 @@
 			});
 		},
 		open: function() {
-			// config.toUser = config.toUser || config.to;
-			// 停止上报访客
-			eventCollector.stopReporting();
 			chat.show();
 		},
 		close: function() {
 			chat.close();
-			// eventCollector.startToReport();
-			// todo 重新上报访客开始
 		}
 	};
 

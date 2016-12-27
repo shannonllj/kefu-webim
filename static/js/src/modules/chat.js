@@ -11,7 +11,7 @@
 		var doms = {
 			agentStatusText: utils.$Class('span.em-header-status-text')[0],
 			agentStatusSymbol: utils.$Dom('em-widgetAgentStatus'),
-			nickname: document.querySelector('.em-widgetHeader-nickname'),
+			nickname: document.querySelector('.em-widgetHeader-nickname')
 		};
 
 		easemobim.doms = doms;
@@ -22,16 +22,16 @@
 		easemobim.imChat = utils.$Dom('em-kefu-webim-chat');
 		easemobim.imChatBody = utils.$Dom('em-widgetBody');
 		easemobim.send = utils.$Dom('em-widgetSend');
-		easemobim.textarea = easemobim.send.getElementsByTagName('textarea')[0];
+		easemobim.textarea = easemobim.send.querySelector('.em-widget-textarea');
 		easemobim.sendBtn = utils.$Dom('em-widgetSendBtn');
-		easemobim.faceBtn = easemobim.send.getElementsByTagName('i')[0];
+		easemobim.faceBtn = easemobim.send.querySelector('.em-bar-face');
 		easemobim.realFile = utils.$Dom('em-widgetFileInput');
 		easemobim.sendFileBtn = utils.$Dom('em-widgetFile');
 		easemobim.noteBtn = utils.$Dom('em-widgetNote');
 		easemobim.dragHeader = utils.$Dom('em-widgetDrag');
-		easemobim.dragBar = easemobim.dragHeader.getElementsByTagName('p')[0];
+		easemobim.dragBar = easemobim.dragHeader.querySelector('.drag-bar');
 		easemobim.chatFaceWrapper = utils.$Dom('EasemobKefuWebimFaceWrapper');
-		easemobim.avatar = utils.$Class('img.em-widgetHeader-portrait')[0];
+		easemobim.avatar = document.querySelector('.em-widgetHeader-portrait');
 		easemobim.swfupload = null;//flash 上传
 
 
@@ -71,12 +71,22 @@
 				if (me.readyHandled) return;
 				me.readyHandled = true;
 
+				// bug fix:
+				// minimum = fales 时, 或者 访客回呼模式 调用easemobim.bind时显示问题
+				if(config.minimum === false || config.eventCollector === true){
+					transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
+				}
 				if ( info && config.user ) {
 					config.user.token = config.user.token || info.accessToken;
 				}
 
 				easemobim.leaveMessage && easemobim.leaveMessage.auth(me.token, config);
 
+				// 发送用于回呼访客的命令消息
+				if(this.cachedCommandMessage){
+					me.sendTextMsg('', false, this.cachedCommandMessage);
+					this.cachedCommandMessage = null;
+				}
 				if ( utils.isTop ) {
                     //get ext
                     if(config.ext){
@@ -732,21 +742,29 @@
 					}
 				);
 				
-				!utils.isMobile && !utils.isTop && utils.on(easemobim.imBtn, utils.click, function () {
-					transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
-				});
+				if(!utils.isTop){
+					// 最小化
+					utils.on(document.querySelector('.em-widgetHeader-min'), 'click', function () {
+						transfer.send(easemobim.EVENTS.CLOSE, window.transfer.to);
+					});
+
+					utils.on(easemobim.imBtn, utils.click, function () {
+						transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
+					});
+
+					utils.on(document, 'mouseover', function () {
+						transfer.send(easemobim.EVENTS.RECOVERY, window.transfer.to);
+					});
+				}
 				utils.on(easemobim.imChatBody, utils.click, function () {
 					easemobim.textarea.blur();
 					return false;
-				});
-				utils.on(document, 'mouseover', function () {
-					utils.isTop || transfer.send(easemobim.EVENTS.RECOVERY, window.transfer.to);
 				});
 				utils.live('img.em-widget-imgview', 'click', function () {
 					easemobim.imgView.show(this.getAttribute('src'));
 				});
 
-				if (config.dragenable && !utils.isMobile && !utils.isTop) {//drag
+				if (config.dragenable && !utils.isTop) {
 					
 					easemobim.dragBar.style.cursor = 'move';
 
@@ -822,33 +840,33 @@
 				});
 
 				utils.live('button.js_robotTransferBtn', utils.click,  function () {
-					var that = this;
+					if ( this.clicked ) { return false; }
 
-					if ( that.clicked ) { return false; }
-
-					that.clicked = true;
-					me.transferToKf(that.getAttribute('data-id'), that.getAttribute('data-sessionid'));
+					this.clicked = true;
+					me.transferToKf(this.getAttribute('data-id'), this.getAttribute('data-sessionid'));
 					return false;
 				});
 
 				//机器人列表
 				utils.live('button.js_robotbtn', utils.click, function () {
-					var that = this;
-
-					me.sendTextMsg(utils.html(that), null, {
-						msgtype: {
-							choice: { menuid: that.getAttribute('data-id') }
+					me.sendTextMsg(utils.html(this), null, {ext:
+						{
+							msgtype: {
+								choice: {
+									menuid: this.getAttribute('data-id')
+								}
+							}
 						}
 					});
 					return false;
 				});
 				
-				var handleSendBtn = function () {
-					if ( !me.readyHandled ) {
-						utils.addClass(easemobim.sendBtn, 'disabled');
-						return false;
-					}
-					utils.toggleClass(easemobim.sendBtn, 'disabled', !easemobim.textarea.value);
+				function handleSendBtn(){
+					utils.toggleClass(
+						easemobim.sendBtn,
+						'disabled',
+						!me.readyHandled || !easemobim.textarea.value
+					);
 				};
 
 				utils.on(easemobim.textarea, 'keyup', handleSendBtn);
@@ -911,18 +929,11 @@
 					easemobim.leaveMessage.show();
 				});
 
-				// 最小化
-				utils.on(document.querySelector('.em-widgetHeader-min'), 'click', function () {
-					transfer.send(easemobim.EVENTS.CLOSE, window.transfer.to);
-					return false;
-				});
-
 				//hot key
 				utils.on(easemobim.textarea, 'keydown', function ( evt ) {
 					if(evt.keyCode !== 13) return;
 
 					if(utils.isMobile || evt.ctrlKey || evt.shiftKey){
-						this.value += '\n';
 						return false;
 					}
 					else{
@@ -934,8 +945,8 @@
 
 						// 可能是事件绑定得太多了，导致换行清不掉，稍后解决
 						setTimeout(function(){
-							this.value = '';
-						}.bind(this), 0);
+							easemobim.textarea.value = '';
+						}, 0);
 					}
 				});
 

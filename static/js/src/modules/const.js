@@ -19,7 +19,7 @@
 			Hidden: 'hidden',
 			Offline: 'offline',
 			Logout: 'offline',
-			Other: 'em-hide'
+			Other: 'hide'
 		},
 		eventMessageText: {
 			TRANSFERING: '会话转接中，请稍候',

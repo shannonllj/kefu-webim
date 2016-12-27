@@ -209,7 +209,30 @@
 				easemobim.emajax(createObject({
 					url: '/v1/rtcmedia/media_streams/' + streamId,
 					msg: msg,
-					type: 'PUT',
+					type: 'PUT'
+				}));
+				break;
+			case 'graylist':
+				easemobim.emajax(createObject({
+					url: '/management/graylist',
+					msg: msg,
+					excludeData: true
+				}));
+				break;
+			case 'getCurrentServiceSession':
+				easemobim.emajax(createObject({
+					url: '/v1/webimplugin/tenant/'
+						+ msg.data.tenantId
+						+ '/visitors/'
+						+ msg.data.id
+						+ '/CurrentServiceSession?techChannelInfo='
+						+ msg.data.orgName + '%23'
+						+ msg.data.appName + '%23'
+						+ msg.data.imServiceNumber
+						+ '&tenantId='
+						+ msg.data.tenantId,
+					msg: msg,
+					excludeData: true
 				}));
 				break;
 			default:

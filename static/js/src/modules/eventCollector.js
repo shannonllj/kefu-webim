@@ -10,12 +10,12 @@
 	function _reportData(userType, userId){
 		transfer.send({event: 'updateURL'}, window.transfer.to);
 
-		easemobim.api('reportEvent', {
+		_url && easemobim.api('reportEvent', {
 			type: 'VISIT_URL',
 			// 第一次轮询时URL还未传过来，所以使用origin
-			url: _url || transfer.origin,
+			url: _url,
 			// for debug
-			url: 'http://172.17.3.86',
+			// url: 'http://172.17.3.86',
 			// 时间戳不传，以服务器时间为准
 			// timestamp: 0,
 			userId: {
@@ -38,7 +38,7 @@
 							_polling.stop();
 							_polling = new Polling(function(){
 								_reportData('VISITOR', _gid);
-							});
+							}, POLLING_INTERVAL);
 						}
 						_stopReporting();
 						_callback(data);
@@ -54,12 +54,18 @@
 
 	function _deleteEvent(){
 		_gid && api('deleteEvent', {userId: _gid});
-		_gid = '';
+		// _gid = '';
 	}
 
 	function _startToReoprt(config, callback){
 		_callback || (_callback = callback);
 		_config || (_config = config);
+
+		// h5 方式屏蔽访客回呼功能
+		if(utils.isTop) return;
+
+		// 要求外部页面更新URL
+		transfer.send({event: 'updateURL'}, window.transfer.to);
 
 		// 用户点击联系客服弹出的窗口，结束会话后调用的startToReport没有传入参数
 		if(!_config){
@@ -93,23 +99,43 @@
 	}
 
 	function _reportVisitor(username){
+		// 获取关联信息
 		api('getRelevanceList', {
 			tenantId: _config.tenantId
 		}, function(msg) {
 			if (!msg.data.length) {
 				throw '未创建关联';
 			}
+			var splited = _config.appKey.split('#');
 			var relevanceList = msg.data[0];
-			var orgName = relevanceList.orgName;
-			var appName = relevanceList.appName;
+			var orgName = splited[0] || relevanceList.orgName;
+			var appName = splited[1] || relevanceList.appName;
 			var imServiceNumber = relevanceList.imServiceNumber;
+
+			_config.restServer = _config.restServer || relevanceList.restDomain;
+			var cluster = _config.restServer ? _config.restServer.match(/vip\d/) : '';
+			cluster = cluster && cluster.length ? '-' + cluster[0] : '';
+			_config.xmppServer = _config.xmppServer || 'im-api' + cluster + '.easemob.com';
+
 			_gid = orgName + '#' + appName + '_' + username;
 
 			_polling = new Polling(function(){
 				_reportData('VISITOR', _gid);
 			}, POLLING_INTERVAL);
 
-			_polling.start();
+			// 获取当前会话信息
+			api('getCurrentServiceSession', {
+				tenantId: _config.tenantId,
+				orgName: orgName,
+				appName: appName,
+				imServiceNumber: imServiceNumber,
+				id: username
+			}, function(msg){
+				// 没有会话数据，则开始轮询
+				if(!msg.data){
+					_polling.start();
+				}
+			});
 		});
 	}
 

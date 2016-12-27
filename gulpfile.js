@@ -1,6 +1,6 @@
 
 var debug = false;
-const VERSION = 'benz.43.11.006';
+const VERSION = 'benz.43.12.000';
 
 const gulp = require('gulp');
 const postcss = require('gulp-postcss');
@@ -75,7 +75,10 @@ gulp.task('cssmin', function() {
 
 //jshint
 gulp.task('lint', function() {
-	gulp.src('static/js/src/*.js')
+	gulp.src([
+		'static/js/src/*.js',
+		'static/js/src/modules/*.js',
+	])
 	.pipe(jshint({
 		"laxcomma" : true,
 		"laxbreak" : true,
