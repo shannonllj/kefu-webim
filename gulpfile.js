@@ -1,6 +1,6 @@
 
 var debug = false;
-const VERSION = 'benz.43.12.001';
+const VERSION = 'benz.43.12.002';
 
 const gulp = require('gulp');
 const postcss = require('gulp-postcss');

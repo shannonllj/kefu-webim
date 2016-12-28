@@ -23,6 +23,7 @@
 		dialogHeight: '550px',
 		dragenable: true,
 		minimum: true,
+		hideKeyboard: true,
 		soundReminder: true,
 		dialogPosition: { x: '10px', y: '10px' },
 		user: {
