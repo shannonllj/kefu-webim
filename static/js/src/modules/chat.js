@@ -147,7 +147,7 @@
 				//set tenant logo
 				this.setLogo();
 				// init live streaming
-				utils.isMobile && easemobim.liveStreaming.init(this, this.channel.send, config);
+				// utils.isMobile && easemobim.liveStreaming.init(this, this.channel.send, config);
 				//mobile set textarea can growing with inputing
 				utils.isMobile && this.initAutoGrow();
 				this.chatWrapper.getAttribute('data-getted') || config.newuser || this.getHistory();

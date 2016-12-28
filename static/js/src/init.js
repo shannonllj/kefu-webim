@@ -171,11 +171,11 @@
 		}
 
 		// 留言按钮
-		utils.toggleClass(
-			utils.$Dom('em-widgetNote'),
-			'em-hide',
-			!config.ticket
-		);
+		// utils.toggleClass(
+		// 	utils.$Dom('em-widgetNote'),
+		// 	'em-hide',
+		// 	!config.ticket
+		// );
 
 		// 最小化按钮
 		utils.toggleClass(
