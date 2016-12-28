@@ -146,6 +146,9 @@
 
 			// benz patch
 			if(easemobim.config.h5Origin){
+				// 避免缓存配置
+				reset();
+				utils.extend(_config, config);
 				a.setAttribute(
 					'href',
 					iframe.url + '&ext='
