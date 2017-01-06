@@ -1,6 +1,6 @@
 
 var debug = false;
-const VERSION = 'benz.43.12.002';
+const VERSION = 'benz.43.12.003';
 
 const gulp = require('gulp');
 const postcss = require('gulp-postcss');
@@ -93,11 +93,9 @@ gulp.task('combineJs', function() {
 	var main = gulp.src([
 		'static/js/src/sdk/strophe.js',
 		// 'static/js/src/sdk/strophe-1.2.8.js',
-		'static/js/src/sdk/adapter.js',
 		'static/js/src/sdk/webim.config.js',
 		'static/js/src/sdk/websdk-1.4.6.js',
 		'static/js/src/sdk/easemob.im-1.1.1.js',
-		'static/js/src/sdk/webrtc-1.4.4.js',
 		'static/js/src/modules/polyfill.js',
 		'static/js/src/modules/utils.js',
 		'static/js/src/modules/const.js',
@@ -105,7 +103,6 @@ gulp.task('combineJs', function() {
 		'static/js/src/modules/transfer.js',
 		'static/js/src/modules/api.js',
 		'static/js/src/modules/eventsEnum.js',
-		'static/js/src/modules/autogrow.js',
 		'static/js/src/modules/message.js',
 		'static/js/src/modules/paste.js',
 		'static/js/src/modules/leaveMessage.js',
@@ -115,8 +112,6 @@ gulp.task('combineJs', function() {
 		'static/js/src/modules/wechat.js',
 		'static/js/src/modules/site.js',
 		'static/js/src/modules/channel.js',
-		'static/js/src/modules/ui.js',
-		'static/js/src/modules/videoChat.js',
 		'static/js/src/modules/liveStreaming.js',
 		'static/js/src/modules/chat.js',
 		'static/js/src/modules/eventCollector.js',

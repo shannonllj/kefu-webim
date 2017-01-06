@@ -9,7 +9,7 @@
 
 		// todo: 把dom都移到里边
 		var doms = {
-			agentStatusText: utils.$Class('span.em-header-status-text')[0],
+			agentStatusText: document.querySelector('.em-header-status-text'),
 			agentStatusSymbol: utils.$Dom('em-widgetAgentStatus'),
 			nickname: document.querySelector('.em-widgetHeader-nickname')
 		};
@@ -23,7 +23,10 @@
 		easemobim.imChatBody = utils.$Dom('em-widgetBody');
 		easemobim.send = utils.$Dom('em-widgetSend');
 		easemobim.textarea = easemobim.send.querySelector('.em-widget-textarea');
-		easemobim.sendBtn = utils.$Dom('em-widgetSendBtn');
+		// benz custom send button
+		easemobim.sendBtn = easemobim.send.querySelector(
+			utils.isMobile ? '.em-widget-send-btn-mobile' : '.em-widget-send-btn'
+		);
 		easemobim.faceBtn = easemobim.send.querySelector('.em-bar-face');
 		easemobim.realFile = utils.$Dom('em-widgetFileInput');
 		easemobim.sendFileBtn = utils.$Dom('em-widgetFile');
@@ -63,13 +66,13 @@
 			}
 			, handleReady: function ( info ) {
 				var me = this;
-				if ( easemobim.textarea.value ) {
-					utils.removeClass(easemobim.sendBtn, 'disabled');
-				}
-				easemobim.sendBtn.innerHTML = '发送';
 
 				if (me.readyHandled) return;
 				me.readyHandled = true;
+
+				// benz custom
+				!utils.isMobile && (easemobim.sendBtn.innerHTML = '发送');
+				utils.trigger(easemobim.sendBtn, 'change');
 
 				// bug fix:
 				// minimum = fales 时, 或者 访客回呼模式 调用easemobim.bind时显示问题
@@ -147,9 +150,9 @@
 				//set tenant logo
 				this.setLogo();
 				// init live streaming
-				// utils.isMobile && easemobim.liveStreaming.init(this, this.channel.send, config);
+				utils.isMobile && easemobim.liveStreaming.init(this, this.channel.send, config);
 				//mobile set textarea can growing with inputing
-				utils.isMobile && this.initAutoGrow();
+				// utils.isMobile && this.initAutoGrow();
 				this.chatWrapper.getAttribute('data-getted') || config.newuser || this.getHistory();
 			}
 			, initAutoGrow: function () {
@@ -540,12 +543,12 @@
 					!utils.isMobile && easemobim.textarea.focus();
 					easemobim.textarea.value = easemobim.textarea.value + this.getAttribute('data-value');
 					if ( utils.isMobile ) {
-						me.autoGrowOptions.update();//update autogrow
+						// me.autoGrowOptions.update();//update autogrow
 						setTimeout(function () {
 							easemobim.textarea.scrollTop = 10000;
 						}, 100);
 					}
-					me.readyHandled && utils.removeClass(easemobim.sendBtn, 'disabled');
+					utils.trigger(easemobim.sendBtn, 'change');
 				}, easemobim.chatFaceWrapper);
 			}
 			, errorPrompt: function ( msg, isAlive ) {//暂时所有的提示都用这个方法
@@ -668,13 +671,6 @@
 				}
 
 				me.conn.open(op);
-
-				// init webRTC
-				// 暂时屏蔽 webrtc 功能
-				if(false){
-				// if(utils.isSupportWebRTC){
-					easemobim.videoChat.init(me.conn, me.channel.send, config);
-				}
 			}
 			, soundReminder: function () {
 				var me = this;
@@ -710,38 +706,6 @@
 			, bindEvents: function () {
 				var me = this;
 
-				utils.on(
-					document.querySelector('.em-widgetHeader-keyboard'),
-					utils.click,
-					function(){
-						var status = utils.hasClass(this, 'icon-keyboard-down');
-						me.direction = status ? 'down' : 'up';
-
-						utils.toggleClass(this, 'icon-keyboard-up', status);
-						utils.toggleClass(this, 'icon-keyboard-down', !status);
-
-						switch (me.direction) {
-							case 'up':
-								easemobim.send.style.bottom = 'auto';
-								easemobim.send.style.zIndex = '3';
-								easemobim.send.style.top = '43px';
-								easemobim.imChatBody.style.bottom = '0';
-								easemobim.chatFaceWrapper.style.bottom = 'auto';
-								easemobim.chatFaceWrapper.style.top = 43 + easemobim.send.getBoundingClientRect().height + 'px';
-								break;
-							case 'down':
-								easemobim.send.style.bottom = '0';
-								easemobim.send.style.zIndex = '3';
-								easemobim.send.style.top = 'auto';
-								easemobim.imChatBody.style.bottom = easemobim.send.getBoundingClientRect().height + 'px';
-								easemobim.chatFaceWrapper.style.bottom = easemobim.send.getBoundingClientRect().height + 'px';
-								easemobim.chatFaceWrapper.style.top = 'auto';
-								me.scrollBottom(50);
-								break;
-						}
-					}
-				);
-				
 				if(!utils.isTop){
 					// 最小化
 					utils.on(document.querySelector('.em-widgetHeader-min'), 'click', function () {
@@ -756,10 +720,6 @@
 						transfer.send(easemobim.EVENTS.RECOVERY, window.transfer.to);
 					});
 				}
-				utils.on(easemobim.imChatBody, utils.click, function () {
-					easemobim.textarea.blur();
-					return false;
-				});
 				utils.live('img.em-widget-imgview', 'click', function () {
 					easemobim.imgView.show(this.getAttribute('src'));
 				});
@@ -877,19 +837,17 @@
 					var handleFocus = function () {
 						easemobim.textarea.style.overflowY = 'auto';
 						me.scrollBottom(800);
-						clearInterval(me.focusText);
-						me.focusText = setInterval(function () {
-							document.body.scrollTop = 10000;
-						}, 100);
 					};
 					utils.on(easemobim.textarea, 'input', function () {
-						me.autoGrowOptions.update();
+						// me.autoGrowOptions.update();
 						me.scrollBottom(800);
 					});
 					utils.on(easemobim.textarea, 'focus', handleFocus);
 					utils.one(easemobim.textarea, 'touchstart', handleFocus);
-					utils.on(easemobim.textarea, 'blur', function () {
-						clearInterval(me.focusText);
+
+					!utils.isIOS && utils.on(easemobim.imChatBody, 'click', function () {
+						easemobim.textarea.blur();
+						return false;
 					});
 				}
 
@@ -930,38 +888,32 @@
 				});
 
 				//hot key
-				utils.on(easemobim.textarea, 'keydown', function ( evt ) {
-					if(evt.keyCode !== 13) return;
-
-					if(utils.isMobile || evt.ctrlKey || evt.shiftKey){
-						return false;
+				utils.on(easemobim.textarea, 'keydown', function (evt){
+					if (
+						utils.hasClass(easemobim.sendBtn, 'disabled')
+						|| evt.keyCode !== 13
+						|| evt.ctrlKey
+						|| evt.shiftKey
+					){
+						return;
 					}
-					else{
-						utils.addClass(easemobim.chatFaceWrapper, 'em-hide');
-						if ( utils.hasClass(easemobim.sendBtn, 'disabled') ) {
-							return false;
-						}
-						me.sendTextMsg();
 
-						// 可能是事件绑定得太多了，导致换行清不掉，稍后解决
-						setTimeout(function(){
-							easemobim.textarea.value = '';
-						}, 0);
-					}
+					utils.addClass(easemobim.chatFaceWrapper, 'em-hide');
+					me.sendTextMsg();
+
+					// 需要延时才能清空，否则会有换行符清理不掉
+					setTimeout(function(){
+						easemobim.textarea.value = '';
+					}, 100);
 				});
 
 				utils.on(easemobim.sendBtn, 'click', function () {
-					if ( utils.hasClass(this, 'disabled') ) {
+					if (utils.hasClass(easemobim.sendBtn, 'disabled')) {
 						return false;
 					}
 					utils.addClass(easemobim.chatFaceWrapper, 'em-hide');
 					me.sendTextMsg();
-					if ( utils.isMobile ) {
-						easemobim.textarea.style.height = '34px';
-						easemobim.textarea.style.overflowY = 'hidden';
-						me.direction === 'up' || (easemobim.imChatBody.style.bottom = '77px');
-						easemobim.textarea.focus();
-					}
+					utils.isMobile && easemobim.textarea.focus();
 					return false;
 				});
 			}

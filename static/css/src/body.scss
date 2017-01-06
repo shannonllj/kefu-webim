@@ -1,7 +1,7 @@
 /* 消息窗 */
 .em-widgetBody-wrapper {
 	position: absolute;
-	top: 43px;
+	top: 50px;
 	bottom: 140px;
 	background-color: #F4F7FA;
 	width: 100%;
@@ -13,153 +13,29 @@
 	-webkit-overflow-scrolling: touch;
 }
 
-/* 视屏窗控件 */
-.em-widget-video {
-	position: absolute;
-	top: 43px;
-	width: 100%;
-	height: 270px;
-	background-color: black;
-
-	video {
-		background: black;
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-	}
-
-	.status {
-		position: absolute;
-		color: white;
-		top: 10px;
-		left: 10px;
-		.prompt {
-			font-size: 12px;
-		}
-		.time-escape {
-			font-size: 14px;
-			margin-top: 6px;
-		}
-	}
-	.full-screen-prompt {
-		color: white;
-		display: flex;
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		background: black;
-		flex-flow: column wrap;
-		justify-content: center;
-		align-items: center;
-		p {
-			margin-top: 10px;
-		}
-	}
-	.sub-win {
-		position: absolute;
-		width: 144px;
-		height: 108px;
-		left: 10px;
-		bottom: 10px;
-		border: 1px solid gray;
-		.btn-minimize {
-			color: white;
-			position: absolute;
-			top: 2px;
-			right: 2px;
-			&:before {
-				font-size: 12px;
-				line-height: 12px;
-			}
-		}
-	}
-
-	.toolbar-dial {
-		position: absolute;
-		right: 10px;
-		top: 10px;
-		> i {
-			width: 30px;
-			display: inline-block;
-			border-radius: 50%;
-			line-height: 30px;
-			text-align: center;
-			margin-left: 10px;
-			color: white;
-			&:before {
-				font-size: 20px;
-			}
-			&.btn-accept-call {
-				background: #6aca6b;
-			}
-			&.btn-end-call {
-				background: #fc363b;
-			}
-		}
-	}
-
-	.toolbar-control {
-		position: absolute;
-		right: 10px;
-		bottom: 10px;
-		p {
-			display: block;
-			color: white;
-			&:before {
-				font-size: 24px;
-				line-height: 24px;
-			}
-		}
-	}
-
-	.btn-maximize {
-		display: none;
-		color: white;
-		position: absolute;
-		bottom: 10px;
-		left: 10px;
-		&:before {
-			font-size: 12px;
-			line-height: 12px;
-		}
-	}
-	&.minimized {
-		.sub-win {
-			display: none;
-		}
-		.btn-maximize {
-			display: initial;
-		}
-	}
-}
-
 // 直播控件
 .em-live-streaming-wrapper {
-	position: fixed;
+	z-index: 5;
+	position: absolute;
+	top: 0;
+	width: 100%;
 	background-color: black;
-	z-index: 3;
-	top: 60px;
-	right: 20px;
+
 	video {
-		width: 135px;
-		height: 240px;
+		width: 100%;
+		height: 210px;
 	}
 	.status-panel {
 		padding: 0 10px;
-		line-height: 35px;
-		min-width: 135px;
+		line-height: 44px;
+		height: 44px;
+		width: 100%;
 		box-sizing: border-box;
 		vertical-align: middle;
 		background-color: #333;
 		color: white;
 		.btn-exit {
 			float: right;
-			color: white;
-			&:before {
-				font-size: 20px;
-			}
 		}
 		.playing {
 			display: none;
@@ -191,17 +67,20 @@
 	display: none;
 	z-index: 2;
 	position: absolute;
-	top: 43px;
-	width: 100%;
-	height: 24px;
+	top: 50px;
 	color: white;
+	width: 100%;
 	background-color: red;
-	line-height: 24px;
 	.content {
-		width: 87%;
-		vertical-align: middle;
+		height: 24px;
 		line-height: 24px;
-		margin-left: 10px;
+		display: block;
+		text-align: center;
+		&:before {
+			vertical-align: top;
+			font-size: 24px;
+			line-height: 24px;
+		}
 	}
 	.playing {
 		display: none;
@@ -212,18 +91,9 @@
 			display: none;
 		}
 		.playing {
-			display: inline-block;
+			display: block;
 		}
 	}
-	// .close {
-	// 	position: absolute;
-	// 	right: 10px;
-	// 	height: 24px;
-	// 	color: white;
-	// 	display: inline-block;
-	// 	border-radius: 50%;
-	// 	background-color: rgba(255,255,255,.3);
-	// }
 }
 
 /* 信息栏 */
@@ -231,7 +101,7 @@
 	display: none;
 	z-index: 2;
 	position: absolute;
-	top: 43px;
+	top: 50px;
 	width: 100%;
 	height: 48px;
 	color: #535252;
@@ -270,19 +140,8 @@
 	}
 }
 
-.em-widget-wrapper.has-video {
-	/* 有视频窗时，消息窗继续下移 */
-	.em-widgetBody-wrapper {
-		margin-top: 270px;
-	}
-	/* 显示视频控件 */
-	.em-widget-video {
-		display: block;
-	}
-}
-
 // 直播状态条
-.em-widget-wrapper.has-live-streaming {
+.em-widget-wrapper.has-live-streaming-bar {
 	.em-widget-tip {
 		margin-top: 24px;
 	}
@@ -293,6 +152,7 @@
 		display: block;
 	}
 }
+
 .em-widget-tenant-logo {
 	max-width: 370px;
 	height: 70px;
@@ -375,19 +235,6 @@
 .em-widget-msg-container .chat-face-all {
 	width: 24px;
 	height: 24px;
-}
-.easeWidget-face-rec {
-	position: absolute;
-	z-index: 1;
-	bottom: -5px;
-	left: 8px;
-	width: 12px;
-	height: 12px;
-	border-radius: 2px;
-	box-shadow: -2px 2px 2px rgba(0,0,0,.1);
-	transform: rotate(-45deg);
-	background-color: white;
-	display: none\9;
 }
 .em-bar-face-bg {
 	display: inline-block;

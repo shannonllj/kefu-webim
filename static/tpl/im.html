@@ -59,35 +59,22 @@
 
 			<!--  -->
 			<div class="em-live-streaming-bar">
-				<span class="content icon-video playing">Mercedes-Benz 正在实时视频 点击进入</span>
-				<span class="content icon-video stopped">Mercedes-Benz 视频已结束</span>
-				<!-- <i class="icon-close close"></i> -->
+				<span class="content icon-video playing">正在实时视频 点击进入</span>
+				<span class="content icon-video stopped">视频已结束</span>
 			</div>
 
-			<!-- 视频窗口 -->
-			<div class="em-widget-video" style="display: none;">
-				<video class="main" autoplay></video>
-				<div class="status">
-					<p class="prompt"></p>
-					<p class="time-escape">00:00</p>
+			<!-- 直播窗口 -->
+			<div class="em-live-streaming-wrapper hide">
+				<div class="status-panel">
+					<p>
+						<span class="text playing">实时进行中</span>
+						<span class="text stopped">视频已结束</span>
+						<span class="symbol icon-circle"></span>
+						<span class="btn-exit icon-exit"></span>
+					</p>
+					<p class="time hide">00:00</p>
 				</div>
-				<div class="sub-win">
-					<video class="sub" autoplay></video>
-					<span class="btn-minimize icon-minimize"></span>
-				</div>
-				<div class="toolbar-dial">
-					<i class="btn-accept-call hide icon-answer"></i>
-					<i class="btn-end-call icon-decline"></i>
-				</div>
-				<div class="toolbar-control">
-					<p class="btn-change icon-change"></p>
-					<p class="btn-toggle icon-camera"></p>
-				</div>
-				<span class="btn-maximize icon-maximize"></span>
-				<div class="full-screen-prompt hide">
-					<p class="prompt">视频已结束</p>
-					<p class="time-escape">00:00</p>
-				</div>
+				<video webkit-playsinline playsinline controls></video>
 			</div>
 
 			<!-- 消息容器 -->
@@ -103,28 +90,32 @@
 				<ul class="em-bar-face-container"></ul>
 			</div>
 
-			<!-- 输入框 -->
+			<!-- 操作区 -->
 			<div id="em-widgetSend" class="em-widget-send-wrapper">
-				<i class="em-bar-face icon-face e-face fg-hover-color" title="表情"></i>
-				<i class="em-widget-file icon-picture fg-hover-color" id="em-widgetFile" title="图片"></i>
-				<i class="em-widget-note icon-note em-hide fg-hover-color" id="em-widgetNote" title="留言"></i>
-				<i class="icon-video fg-hover-color em-video-invite hide" title="视频通话"></i>
-				<i class="icon-flower fg-hover-color em-widget-satisfaction hide" title="评价客服"></i>
-				<i class="icon-video fg-hover-color em-live-streaming-invite hide" title="Live Streaming"></i>
-				<input id="em-widgetFileInput" type="file" accept="image/jpeg,image/png,image/gif"/>
-				<textarea class="em-widget-textarea" spellcheck="false" placeholder="点击输入内容..."></textarea>
-				<span class="em-widget-send bg-color disabled" id="em-widgetSendBtn">连接中</span>
-			</div>
-
-			<!-- 视频确认对话框 -->
-			<div class="em-dialog-video-confirm hide">
-				<p class="prompt">
-					您要邀请客服为您进行实时视频服务么？点击确认发送邀请，等待客服接受后即可体验实时视频服务。
-				</p>
-				<div class="button-panel">
-					<span class="btn-cancel">取消</span>
-					<span class="btn-confirm">发送</span>
+				<!-- 工具栏 -->
+				<div class="toolbar">
+					<i class="em-bar-face icon-face e-face fg-hover-color" title="表情"></i>
+					<i class="em-widget-file icon-picture fg-hover-color" id="em-widgetFile" title="图片"></i>
+					<i class="em-widget-note icon-note em-hide fg-hover-color" id="em-widgetNote" title="留言"></i>
+					<i class="icon-video fg-hover-color em-video-invite hide" title="视频通话"></i>
+					<i class="icon-flower fg-hover-color em-widget-satisfaction hide" title="评价客服"></i>
+					<i class="icon-video fg-hover-color em-live-streaming-invite hide" title="Live Streaming"></i>
 				</div>
+
+				<!-- 输入框 -->
+				<div class="input">
+					<!-- 文本输入区 -->
+					<textarea class="em-widget-textarea" spellcheck="false" placeholder="点击输入内容..."></textarea>
+
+					<!-- pc端发送按钮 -->
+					<span class="em-widget-send-btn bg-color disabled">连接中</span>
+
+					<!-- 移动端发送按钮 -->
+					<span class="em-widget-send-btn-mobile icon-send disabled"></span>
+				</div>
+
+				<!-- 文件输入，由于sdk限制，这个元素必须有id -->
+				<input id="em-widgetFileInput" type="file" accept="image/jpeg,image/png,image/gif"/>
 			</div>
 
 			<!-- 满意度评价对话框 -->
@@ -160,21 +151,6 @@
 	<!-- 图片查看 -->
 	<div class="img-view hide">
 		<img class="show-all" src="">
-	</div>
-
-	<div class="em-live-streaming-wrapper hide">
-		<div class="status-panel">
-			<p>
-				<span class="text playing">实时进行中</span>
-				<span class="text stopped">视频已结束</span>
-				<span class="symbol icon-circle"></span>
-				<span class="btn-exit icon-exit"></span>
-			</p>
-			<p class="time hide">00:00</p>
-		</div>
-		<!-- <div class="ctrl-panel"> -->
-		<!-- </div> -->
-		<video webkit-playsinline playsinline controls></video>
 	</div>
 
 	<!-- 用于跨域请求的iframe -->

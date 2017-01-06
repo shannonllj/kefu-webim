@@ -6,14 +6,12 @@
 	background-color: white;
 	-webkit-backface-visibility:hidden;
 	// 工具栏按钮
-	i {
-		float: left;
-		top: 5px;
-		left: 5px;
-		position: relative;
-		color: #4d4d4d;
-		&:hover {
-			cursor: pointer;
+	.toolbar {
+		padding: 5px;
+		> i {
+			&:hover {
+				cursor: pointer;
+			}
 		}
 	}
 	// 输入框
@@ -41,18 +39,21 @@
 	background: #fff;
 	background: rgba(255,255,255,.7);
 }
-#em-widgetSendBtn.disabled {
-	background-color: #ccc;
-	cursor: default;
-}
-.em-widget-send {
+.em-widget-send-btn {
 	position: absolute;
 	right: 10px;
 	bottom: 10px;
 	width: 100px;
-	border-radius: 4px;
 	height: 30px;
 	text-align: center;
 	line-height: 30px;
 	color: white;
+ 	&.disabled {
+		background-color: black!important;
+	    color: #999!important;
+		cursor: default;
+	}
+}
+.em-widget-send-btn-mobile {
+	display: none;
 }

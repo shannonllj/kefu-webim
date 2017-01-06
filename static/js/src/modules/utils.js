@@ -2,6 +2,7 @@
 	window.easemobim = window.easemobim || {};
 
 	var _isAndroid = /android/i.test(navigator.useragent);
+	var _isIOS = /(iPad|iPhone|iPod)/gi.test(navigator.userAgent)
 	var _isMobile = /mobile/i.test(navigator.userAgent);
 	var _getIEVersion = (function () {
 			var result, matches;
@@ -332,6 +333,7 @@
 			return matches ? matches[1] : '';
 		}
 		, isAndroid: _isAndroid
+		, isIOS: _isIOS
 		, isMobile: _isMobile
 		, click: _isMobile && ('ontouchstart' in window) ? 'touchstart' : 'click'
 		, isQQBrowserInAndroid: _isAndroid && /MQQBrowser/.test(navigator.userAgent)

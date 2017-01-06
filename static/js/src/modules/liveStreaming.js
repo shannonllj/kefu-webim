@@ -7,17 +7,19 @@ easemobim.liveStreaming = (function(){
 	var btnExit = videoWrapper.querySelector('.btn-exit');
 	var video = videoWrapper.querySelector('video');
 	var timeSpan = videoWrapper.querySelector('.status-panel .time');
+	var messageInput = document.querySelector('.em-widget-textarea');
 
-	var sourceURL = 'http://vlive3.hls.cdn.ucloud.com.cn/ucloud/cyy-111/playlist.m3u8';
-	var config = null;
-	var sendMessageAPI = null;
+	var sourceURL;
+	var config;
+	var sendMessageAPI;
 
 	var closingTimer = {
 		delay: 3000,
 		start: function(){
 			var me = this;
 			setTimeout(function(){
-				imChat.classList.remove('has-live-streaming');
+				imChat.classList.remove('has-live-streaming-bar');
+				imChat.classList.remove('has-live-streaming-video');
 				videoWrapper.classList.add('hide');
 			}, me.delay);
 		}
@@ -46,71 +48,30 @@ easemobim.liveStreaming = (function(){
 		}
 	};
 
-	var autoReload = {
-		timer: null,
-		interval: 500,
-		timeout: 5000,
-		timeStamp: Infinity,
-		start: function(){
+	if (utils.isIOS){
+		messageInput.addEventListener('focus', videoAdjust, false);
+		messageInput.addEventListener('blur', videoAdjust, false);
+		document.body.addEventListener('touchmove', function(e){
 			var me = this;
-			this.updateTimeStamp();
-			this.timer = this.timer || setInterval(function(){
-				console.log('check progress');
-				var diff = (new Date()).getTime() - me.timeStamp;
-				if (diff > me.timeout && !video.paused){
-					console.log('reload video');
-					me.updateTimeStamp();
-					video.src = sourceURL;
-					video.play();
-				}
-			}, this.interval);
-		},
-		stop: function(){
-			this.timer && clearInterval(this.timer);
-		},
-		updateTimeStamp: function(){
-			this.timeStamp = (new Date().getTime());
-		}
-	};
-
-	// fake 解决某些型号手机的时间自动清零问题
-	var timeAccumulator = {
-		lastCurrentTime: 0,
-		accumulatedTime: 0,
-		update: function(){
-			var delta = video.currentTime - this.lastCurrentTime;
-			if (delta >= 0){
-				this.accumulatedTime += delta;
+			var TIME_INTERVAL = 500;
+			var currentTime = new Date().getTime();
+			var lastTimeStamp = me.timeStamp || 0;
+			if (currentTime - lastTimeStamp > TIME_INTERVAL){
+				videoAdjust();
+				me.timeStamp = currentTime;
 			}
-			else {
-				// 初始时间不要累加，否则导致时间会超前于推流端
-				// this.accumulatedTime += video.currentTime;
-			}
-			this.lastCurrentTime = video.currentTime;
-			return this.accumulatedTime;
-		},
-		init: function(){
-			this.lastCurrentTime = 0;
-			this.accumulatedTime = 0;
-		}
+		}, false);
 	}
 
-	function autoResize(width, height){
-		var LIMIT = {
-			width: 240,
-			height: 240
-		};
-
-		var targetAspectRadio = width / height;
-		var currentAspectRadio = LIMIT.width / LIMIT.height;
-
-		if (currentAspectRadio > targetAspectRadio){
-			video.style.width = Math.floor(LIMIT.height * targetAspectRadio) + 'px';
-		}
-		else {
-			video.style.height = Math.floor(LIMIT.width / targetAspectRadio) + 'px';
-		}
-
+	function videoAdjust(){
+		setTimeout(function(){
+			var videoWrapperOffset = videoWrapper.getBoundingClientRect().top;
+			var bodyOffset = -document.body.getBoundingClientRect().top;
+			console.log(videoWrapperOffset, bodyOffset);
+			if (videoWrapperOffset){
+				videoWrapper.style.top = bodyOffset + 'px';
+			}
+		}, 500);
 	}
 
 	function bindEvent(){
@@ -121,6 +82,7 @@ easemobim.liveStreaming = (function(){
 			statusPoller.updateStatus('IDLE');
 			video.pause();
 			videoWrapper.classList.add('hide');
+			imChat.classList.remove('has-live-streaming-video');
 		}, false);
 		bar.addEventListener('click', function(e){
 			video.src = sourceURL;
@@ -128,28 +90,13 @@ easemobim.liveStreaming = (function(){
 			// autoReload.start();
 			video.play();			
 			videoWrapper.classList.remove('hide');
+			imChat.classList.add('has-live-streaming-video');
 		}, false);
 		video.addEventListener('loadeddata', function(e){
 			console.log(e.type);
 			console.log('size', video.videoWidth, video.videoHeight);
-			autoResize(video.videoWidth, video.videoHeight);
+			// autoResize(video.videoWidth, video.videoHeight);
 		}, false);
-		video.addEventListener('timeupdate', function(e){
-			var cached = format(timeAccumulator.update());
-			// var cached = format(video.currentTime);
-			if(timeSpan.innerHTML !== cached){
-				timeSpan.innerHTML = cached;
-			}
-			function format(second){
-				return (new Date(second * 1000))
-					.toISOString()
-					.slice(-'00:00.000Z'.length)
-					.slice(0, '00:00'.length);
-			}
-		}, false);
-		// video.addEventListener('progress', function(e){
-		// 	autoReload.updateTimeStamp();
-		// }, false);
 	}
 
 	function initDebug(){
@@ -165,6 +112,7 @@ easemobim.liveStreaming = (function(){
 			'waiting',
 			'progress',
 			'webkitbeginfullscreen',
+			'timeupdate',
 			'webkitendfullscreen'
 		].forEach(function(eventName){
 			video.addEventListener(eventName, function(e){
@@ -198,7 +146,6 @@ easemobim.liveStreaming = (function(){
 					videoWrapper.classList.remove('playing');
 					timeSpan.innerHTML = '00:00';
 					statusPoller.stop();
-					// autoReload.stop();
 					video.pause();
 					video.src = '';
 					closingTimer.start();
@@ -216,7 +163,7 @@ easemobim.liveStreaming = (function(){
 		sourceURL = streamUri;
 		bar.classList.add('playing');
 		videoWrapper.classList.add('playing');
-		imChat.classList.add('has-live-streaming');
+		imChat.classList.add('has-live-streaming-bar');
 	}
 
 	return {
@@ -226,6 +173,8 @@ easemobim.liveStreaming = (function(){
 
 			// 按钮初始化
 			btnVideoInvite.classList.remove('hide');
+			// 计算视频高度
+			video.style.height = Math.floor(window.innerWidth / 16 * 9) + 'px';
 			bindEvent();
 			initDebug();
 
@@ -236,7 +185,6 @@ easemobim.liveStreaming = (function(){
 		},
 		open: function(streamId) {
 			statusPoller.start(streamId);
-			timeAccumulator.init();
 			utils.set('streamId', streamId, 1);
 		},
 		onOffline: function() {

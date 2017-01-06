@@ -145,13 +145,13 @@ easemobim.channel = function ( config ) {
 				utils.extend(msg.body, ext);
 			}
 
-			utils.addClass(easemobim.sendBtn, 'disabled');
 			if ( !isHistory ) {
 				me.setExt(msg);
 				_obj.appendAck(msg, id);
 				me.conn.send(msg.body);
 				sendMsgSite.set(id, msg);
 				easemobim.textarea.value = '';
+				utils.trigger(easemobim.sendBtn, 'change');
 				if ( msg.body.ext && msg.body.ext.type === 'custom' ) { return; }
 				me.appendDate(new Date().getTime(), config.toUser);
 				me.appendMsg(config.user.username, config.toUser, msg);
@@ -552,10 +552,6 @@ easemobim.channel = function ( config ) {
 					utils.isMobile && me.conn.close();
 					// for debug
 					console.log('onOffline-channel');
-					// 断线关闭视频通话
-					if(utils.isSupportWebRTC){
-						easemobim.videoChat.onOffline();
-					}
 				// todo 断线后停止轮询坐席状态
 				// me.stopGettingAgentStatus();
 				}

@@ -175,15 +175,14 @@ object {
 	position: absolute;
 	width: 320px;
 	height: 380px;
-	background-color: white;
+	background-color: #484848;
 	box-shadow: 0 10px 20px rgba(0,0,0,.3);
 	top: 50%;
 	left: 50%;
 	margin-left: -160px;
 	margin-top: -180px;
-	border-radius: 5px;
 	overflow: hidden;
-	border: 1px solid #efefef;
+	border: 1px solid #3a3a3a;
 	div {
 		width: 90%;
 		margin: 0 auto;
@@ -194,17 +193,14 @@ object {
 		padding: 0;
 		height: 30px;
 		line-height: 30px;
-		border-radius: 4px;
 		color: white;
-		border: none;
+		border: 0;
 		font-size: 13px;
 		cursor: pointer;
 		float: right;
 	}
 	.em-widget-cancel {
-		background-color: white;
-		color: #A6A6A6;
-		border: 1px solid #E4E4E4;
+		background-color: #666666;
 		float: left;
 	}
 }
@@ -215,7 +211,7 @@ object {
 	font-size: 13px;
 	h3 {
 		font-weight: normal;
-		color: #646464;
+		color: white;
 		margin: 20px 0 30px 16px;
 		font-size: 13px;
 	}
@@ -230,7 +226,7 @@ object {
 		text-align: center;
 		li {
 			display: inline-block;
-			color: #ccc;
+			color: #797979;
 			&:before {
 				position: relative;
 				width: 55px;
@@ -244,7 +240,7 @@ object {
 				font-size: 60px;
 			}
 			&.sel {
-				color: #ffb31a;
+				color: #f9e799;
 			}
 		}
 	}
@@ -256,8 +252,8 @@ object {
 		height: 120px;
 		margin: 35px auto 25px;
 		display: block;
-		border: 1px solid #E4E4E4;
-		border-radius: 6px;
+		border: 0;
+		background-color: #666666;
 		font-size: 13px;
 	}
 }

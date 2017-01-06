@@ -32,8 +32,8 @@ body {
 	border-radius: 0;
 }
 .benz-logo-with-text {
-	height: 43px;
-	width: 150px;
+	height: 48px;
+	width: 167.4px;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -85,7 +85,7 @@ body {
 	box-shadow: 0 -1px 0 #333;
 	background-color: #666666;
 	// 工具栏图标
-	> i {
+	.toolbar > i {
 		color: white;
 		&:hover {
 			color: white;
@@ -95,15 +95,6 @@ body {
 .em-widget-textarea {
 	color: #b7b7b7;
 	background-color: #666666;
-}
-
-// 发送按钮
-#em-widgetSendBtn {
-	border-radius: 0;
-	&.disabled {
-	    background-color: black;
-	    color: #999;
-	}
 }
 
 // 联系客服按钮
@@ -140,7 +131,7 @@ body {
 		background-color: #1c1c1c;
 
 		// 工具栏图标
-		> i {
+		.toolbar > i {
 			color: #e5e5e5;
 			bottom: 12px;
 		}
