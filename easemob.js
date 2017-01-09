@@ -2,6 +2,7 @@
 	window.easemobim = window.easemobim || {};
 
 	var _isAndroid = /android/i.test(navigator.useragent);
+	var _isIOS = /(iPad|iPhone|iPod)/gi.test(navigator.userAgent)
 	var _isMobile = /mobile/i.test(navigator.userAgent);
 	var _getIEVersion = (function () {
 			var result, matches;
@@ -332,6 +333,7 @@
 			return matches ? matches[1] : '';
 		}
 		, isAndroid: _isAndroid
+		, isIOS: _isIOS
 		, isMobile: _isMobile
 		, click: _isMobile && ('ontouchstart' in window) ? 'touchstart' : 'click'
 		, isQQBrowserInAndroid: _isAndroid && /MQQBrowser/.test(navigator.userAgent)
@@ -340,17 +342,16 @@
 			return document.visibilityState && document.visibilityState === 'hidden' || document.hidden;
 		}
 		, setStore: function ( key, value ) {
-			if ( typeof value === 'undefined' ) {
-				return;
-			}
 			try {
 				localStorage.setItem(key, value);
-			} catch ( e ) {}
+			}
+			catch (e){}
 		}
 		, getStore: function ( key ) {
 			try {
 				return localStorage.getItem(key);
-			} catch ( e ) {}
+			}
+			catch (e){}
 		}
 		, clearStore: function ( key ) {
 			try {
@@ -868,7 +869,7 @@ easemobim.titleSlide = function () {
 		me.config.parentId = me.iframe.id;
 
 		me.message
-		.send(me.config)
+		.send({event: 'initConfig', data: me.config})
 		.listen(function ( msg ) {
 
 			if ( msg.to !== me.iframe.id ) { return; }
@@ -934,6 +935,9 @@ easemobim.titleSlide = function () {
 				case 'setItem':
 					utils.setStore(msg.data.key, msg.data.value);
 					break;
+				case 'updateURL':
+					me.message.send({event: 'updateURL', data: location.href});
+					break;
 				default:
 					break;
 			};
@@ -963,7 +967,7 @@ easemobim.titleSlide = function () {
 		}
 
 		this.url = '';
-		// IE6-	8 不支持修改iframe名称
+		// IE6-8 不支持修改iframe名称
 		this.iframe = (/MSIE (6|7|8)/).test(navigator.userAgent)
 			? document.createElement('<iframe name="' + new Date().getTime() + '">')
 			: document.createElement('iframe');
@@ -1006,7 +1010,7 @@ easemobim.titleSlide = function () {
 		var destUrl = {
 			tenantId: this.config.tenantId,
 			hide: this.config.hide,
-			sat: this.config.visitorSatisfactionEvaluate,
+			sat: this.config.satisfaction,
 			wechatAuth: this.config.wechatAuth,
 			hideKeyboard: this.config.hideKeyboard,
 			eventCollector: this.config.eventCollector,
@@ -1170,21 +1174,19 @@ easemobim.titleSlide = function () {
 	};
 
 	// 发ext消息
-	Iframe.prototype.send = function ( ext ) {
-		easemobim.EVENTS.EXT.data = ext;	
-		this.message.send(easemobim.EVENTS.EXT);
+	Iframe.prototype.send = function(extMsg) {
+		this.message.send({event: 'ext', data: extMsg});
 	};
 
 	// 发文本消息
-	Iframe.prototype.sendText = function ( msg ) {
-		easemobim.EVENTS.TEXTMSG.data = msg;	
-		this.message.send(easemobim.EVENTS.TEXTMSG);
+	Iframe.prototype.sendText = function(msg) {
+		this.message.send({event: 'textmsg', data: msg});
 	};
 
 	easemobim.Iframe = Iframe;
 }(
 	easemobim.utils
-	));
+));
 
 /*
  * 环信移动客服WEB访客端插件接入js
@@ -1194,7 +1196,7 @@ easemobim.titleSlide = function () {
 	'use strict';
 	var utils = easemobim.utils;
 	easemobim.config = easemobim.config || {};
-	easemobim.version = 'benz.43.11.005';
+	easemobim.version = 'benz.43.12.004';
 	easemobim.tenants = {};
 
 	var DEFAULT_CONFIG = {
@@ -1211,6 +1213,7 @@ easemobim.titleSlide = function () {
 		dialogHeight: '550px',
 		dragenable: true,
 		minimum: true,
+		hideKeyboard: true,
 		soundReminder: true,
 		dialogPosition: { x: '10px', y: '10px' },
 		user: {
@@ -1257,7 +1260,7 @@ easemobim.titleSlide = function () {
 		_config.domain = _config.domain || baseConfig.domain;
 		_config.path = _config.path || (baseConfig.domain + '/webim');
 		_config.staticPath = _config.staticPath || (baseConfig.domain + '/webim/static');
-	};
+	}
 
 	/*
 	 * @param: {String} 技能组名称，选填
@@ -1334,6 +1337,9 @@ easemobim.titleSlide = function () {
 
 			// benz patch
 			if(easemobim.config.h5Origin){
+				// 避免缓存配置
+				reset();
+				utils.extend(_config, config);
 				a.setAttribute(
 					'href',
 					iframe.url + '&ext='
@@ -1378,6 +1384,8 @@ easemobim.titleSlide = function () {
 		iframe = easemobim.tenants[cacheKeyName] || easemobim.Iframe(_config);
 		easemobim.tenants[cacheKeyName] = iframe;
 		iframe.set(_config, iframe.close);
+		// 访客上报用后失效
+		easemobim.config.eventCollector = false;
 	}
 
 	//support cmd & amd
