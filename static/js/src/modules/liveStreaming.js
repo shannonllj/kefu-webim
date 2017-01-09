@@ -95,7 +95,6 @@ easemobim.liveStreaming = (function(){
 		video.addEventListener('loadeddata', function(e){
 			console.log(e.type);
 			console.log('size', video.videoWidth, video.videoHeight);
-			// autoResize(video.videoWidth, video.videoHeight);
 		}, false);
 	}
 
@@ -173,10 +172,20 @@ easemobim.liveStreaming = (function(){
 
 			// 按钮初始化
 			btnVideoInvite.classList.remove('hide');
-			// 计算视频高度
-			video.style.height = Math.floor(window.innerWidth / 16 * 9) + 'px';
 			bindEvent();
 			initDebug();
+			// 计算视频高度
+			videoWidth = window.innerWidth;
+			videoHeight = Math.floor(window.innerWidth / 16 * 9);
+
+			// 视频横屏处理，宽高互换，位置修正
+			video.style.height = videoWidth + 'px';
+			video.style.width = videoHeight + 'px';
+			video.style.position = 'relative';
+			video.style.top = videoHeight + 'px';
+			video.style.transform = 'rotate(-90deg)';
+			video.style.transformOrigin = '0 0';
+			videoWrapper.style.height = videoHeight + 44 + 'px';
 
 			var streamId = utils.get('streamId');
 			if (streamId){
