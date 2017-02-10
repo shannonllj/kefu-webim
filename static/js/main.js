@@ -18211,17 +18211,16 @@ if (!String.prototype.trim) {
 			return document.visibilityState && document.visibilityState === 'hidden' || document.hidden;
 		}
 		, setStore: function ( key, value ) {
-			if ( typeof value === 'undefined' ) {
-				return;
-			}
 			try {
 				localStorage.setItem(key, value);
-			} catch ( e ) {}
+			}
+			catch (e){}
 		}
 		, getStore: function ( key ) {
 			try {
 				return localStorage.getItem(key);
-			} catch ( e ) {}
+			}
+			catch (e){}
 		}
 		, clearStore: function ( key ) {
 			try {
@@ -18444,7 +18443,7 @@ if (!String.prototype.trim) {
 			Hidden: 'hidden',
 			Offline: 'offline',
 			Logout: 'offline',
-			Other: 'em-hide'
+			Other: 'hide'
 		},
 		eventMessageText: {
 			TRANSFERING: '会话转接中，请稍候',
@@ -18756,111 +18755,115 @@ easemobIM.Transfer = easemobim.Transfer = (function () {
 		switch ( msg.api ) {
 			case 'getRelevanceList':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/targetChannels', //done
+					url: '/v1/webimplugin/targetChannels',
 					msg: msg
 				}));
 				break;
 			case 'getDutyStatus':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/showMessage',//done
+					url: '/v1/webimplugin/showMessage',
 					msg: msg
 				}));
 				break;
 			case 'getWechatVisitor':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/visitors/wechat/' + msg.data.openid + '?tenantId=' + msg.data.tenantId,//done
+					url: '/v1/webimplugin/visitors/wechat/' + msg.data.openid + '?tenantId=' + msg.data.tenantId,
 					msg: msg,
 					type: 'POST'
 				}));
 				break;
 			case 'createVisitor':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/visitors?tenantId=' + msg.data.tenantId,//done
+					url: '/v1/webimplugin/visitors?tenantId=' + msg.data.tenantId,
 					msg: msg,
 					type: 'POST'
 				}));
 				break;
 			case 'getSession':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/visitors/' + msg.data.id + '/schedule-data?techChannelInfo=' + msg.data.orgName + '%23' + msg.data.appName + '%23' + msg.data.imServiceNumber + '&tenantId=' + msg.data.tenantId,//done
+					url: '/v1/webimplugin/visitors/' + msg.data.id + '/schedule-data?techChannelInfo=' + msg.data.orgName + '%23' + msg.data.appName + '%23' + msg.data.imServiceNumber + '&tenantId=' + msg.data.tenantId,
 					msg: msg,
 					excludeData: true
 				}));
 				break;
 			case 'getExSession':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/visitors/' + msg.data.id + '/schedule-data-ex?techChannelInfo=' + msg.data.orgName + '%23' + msg.data.appName + '%23' + msg.data.imServiceNumber + '&tenantId=' + msg.data.tenantId,//done
+					url: '/v1/webimplugin/visitors/' + msg.data.id + '/schedule-data-ex?techChannelInfo=' + msg.data.orgName + '%23' + msg.data.appName + '%23' + msg.data.imServiceNumber + '&tenantId=' + msg.data.tenantId,
 					msg: msg,
 					excludeData: true
 				}));
 				break;
 			case 'getPassword':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/visitors/password',//done
+					url: '/v1/webimplugin/visitors/password',
 					msg: msg
 				}));
 				break;
 			case 'getGroup':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/visitors/' + msg.data.id + '/ChatGroupId?techChannelInfo=' + msg.data.orgName + '%23' + msg.data.appName + '%23' + msg.data.imServiceNumber + '&tenantId=' + msg.data.tenantId,//done
+					url: '/v1/webimplugin/visitors/' + msg.data.id + '/ChatGroupId?techChannelInfo=' + msg.data.orgName + '%23' + msg.data.appName + '%23' + msg.data.imServiceNumber + '&tenantId=' + msg.data.tenantId,
 					msg: msg,
 					excludeData: true
 				}));
 				break;
 			case 'getGroupNew':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/tenant/' + msg.data.tenantId + '/visitors/' + msg.data.id + '/ChatGroupId?techChannelInfo=' + msg.data.orgName + '%23' + msg.data.appName + '%23' + msg.data.imServiceNumber + '&tenantId=' + msg.data.tenantId,//done
+					url: '/v1/webimplugin/tenant/' + msg.data.tenantId + '/visitors/' + msg.data.id + '/ChatGroupId?techChannelInfo=' + msg.data.orgName + '%23' + msg.data.appName + '%23' + msg.data.imServiceNumber + '&tenantId=' + msg.data.tenantId,
 					msg: msg,
 					excludeData: true
 				}));
 				break;
 			case 'getHistory':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/visitors/msgHistory',//done
+					url: '/v1/webimplugin/visitors/msgHistory',
 					msg: msg
 				}));
 				break;
 			case 'getSlogan':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/notice/options',//done
+					url: '/v1/webimplugin/notice/options',
 					msg: msg
 				}));
 				break;
 			case 'getTheme':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/theme/options',//done
+					url: '/v1/webimplugin/theme/options',
 					msg: msg
 				}));
 				break;
 			case 'getSystemGreeting':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/welcome',//done
+					url: '/v1/webimplugin/welcome',
 					msg: msg
 				}));
 				break;
 			case 'getRobertGreeting':
 				easemobim.emajax(createObject({
-					url: '/v1/Tenants/' + msg.data.tenantId + '/robots/visitor/greetings/' + msg.data.originType + '?tenantId=' + msg.data.tenantId,//done
+					url: '/v1/Tenants/'
+						+ msg.data.tenantId
+						+ '/robots/visitor/greetings/'
+						+ msg.data.originType
+						+ '?tenantId=' + msg.data.tenantId,
 					msg: msg,
 					excludeData: true
 				}));
 				break;
 			case 'sendVisitorInfo':
 				easemobim.emajax(createObject({
-					url: '/v1/webimplugin/tenants/' + msg.data.tenantId + '/visitors/' + msg.data.visitorId + '/attributes?tenantId=' + msg.data.tenantId,//done
+					url: '/v1/webimplugin/tenants/' + msg.data.tenantId + '/visitors/' + msg.data.visitorId + '/attributes?tenantId=' + msg.data.tenantId,
 					msg: msg,
 					type: 'POST'
 				}));
 				break;
 			case 'getProject':
 				easemobim.emajax(createObject({
-					url: '/tenants/' + msg.data.tenantId + '/projects',//done
+					url: '/tenants/' + msg.data.tenantId + '/projects',
 					msg: msg
 				}));
 				break;
 			case 'createTicket':
 				easemobim.emajax(createObject({
-					url: '/tenants/' + msg.data.tenantId + '/projects/' + msg.data.projectId + '/tickets?tenantId=' + msg.data.tenantId + '&easemob-target-username=' + msg.data['easemob-target-username'] + '&easemob-appkey=' + msg.data['easemob-appkey'] + '&easemob-username=' + msg.data['easemob-username'],//done
+					url: '/tenants/'+ msg.data.tenantId + '/projects/' + msg.data.projectId + '/tickets?tenantId=' + msg.data.tenantId + '&easemob-target-username=' + msg.data['easemob-target-username'] + '&easemob-appkey=' + msg.data['easemob-appkey'] + '&easemob-username=' + msg.data['easemob-username'],
 					msg: msg,
 					type: 'POST'
 				}));
@@ -18915,7 +18918,30 @@ easemobIM.Transfer = easemobim.Transfer = (function () {
 				easemobim.emajax(createObject({
 					url: '/v1/rtcmedia/media_streams/' + streamId,
 					msg: msg,
-					type: 'PUT',
+					type: 'PUT'
+				}));
+				break;
+			case 'graylist':
+				easemobim.emajax(createObject({
+					url: '/management/graylist',
+					msg: msg,
+					excludeData: true
+				}));
+				break;
+			case 'getCurrentServiceSession':
+				easemobim.emajax(createObject({
+					url: '/v1/webimplugin/tenant/'
+						+ msg.data.tenantId
+						+ '/visitors/'
+						+ msg.data.id
+						+ '/CurrentServiceSession?techChannelInfo='
+						+ msg.data.orgName + '%23'
+						+ msg.data.appName + '%23'
+						+ msg.data.imServiceNumber
+						+ '&tenantId='
+						+ msg.data.tenantId,
+					msg: msg,
+					excludeData: true
 				}));
 				break;
 			default:
@@ -19735,6 +19761,7 @@ easemobim.uploadShim = function ( config, chat ) {
 	Polling.prototype.start = function (){
 		if (!this.isStarted) {
 			this.isStarted = true;
+			setTimeout(this.fn, 0);
 			this.timerHandler = setInterval(this.fn, this.interval);
 		}
 	};
@@ -20692,7 +20719,9 @@ easemobim.videoChat = (function(dialog){
 		sendMessageAPI = sendMessage;
 		config = cfg;
 
-		videoWidget.classList.remove('hide');
+		// 视频组件初始化
+		// 直接操作style是为了避免video标签在加载时一闪而过，影响体验
+		videoWidget.style.display = '';
 		// 按钮初始化
 		btnVideoInvite.classList.remove('hide');
 		btnVideoInvite.addEventListener('click', function(){
@@ -20869,18 +20898,18 @@ easemobim.liveStreaming = (function(){
 
 	function autoResize(width, height){
 		var LIMIT = {
-			width: 280,
-			height: 300
+			width: 240,
+			height: 240
 		};
 
 		var targetAspectRadio = width / height;
 		var currentAspectRadio = LIMIT.width / LIMIT.height;
 
 		if (currentAspectRadio > targetAspectRadio){
-			videoWrapper.style.width = Math.floor(LIMIT.height * targetAspectRadio) + 'px';
+			video.style.width = Math.floor(LIMIT.height * targetAspectRadio) + 'px';
 		}
 		else {
-			videoWrapper.style.height = Math.floor(LIMIT.width / targetAspectRadio) + 'px';
+			video.style.height = Math.floor(LIMIT.width / targetAspectRadio) + 'px';
 		}
 
 	}
@@ -21041,7 +21070,7 @@ easemobim.liveStreaming = (function(){
 		var doms = {
 			agentStatusText: utils.$Class('span.em-header-status-text')[0],
 			agentStatusSymbol: utils.$Dom('em-widgetAgentStatus'),
-			nickName: utils.$Class('span.em-widgetHeader-nickname')[0],
+			nickname: document.querySelector('.em-widgetHeader-nickname')
 		};
 
 		easemobim.doms = doms;
@@ -21052,16 +21081,16 @@ easemobim.liveStreaming = (function(){
 		easemobim.imChat = utils.$Dom('em-kefu-webim-chat');
 		easemobim.imChatBody = utils.$Dom('em-widgetBody');
 		easemobim.send = utils.$Dom('em-widgetSend');
-		easemobim.textarea = easemobim.send.getElementsByTagName('textarea')[0];
+		easemobim.textarea = easemobim.send.querySelector('.em-widget-textarea');
 		easemobim.sendBtn = utils.$Dom('em-widgetSendBtn');
-		easemobim.faceBtn = easemobim.send.getElementsByTagName('i')[0];
+		easemobim.faceBtn = easemobim.send.querySelector('.em-bar-face');
 		easemobim.realFile = utils.$Dom('em-widgetFileInput');
 		easemobim.sendFileBtn = utils.$Dom('em-widgetFile');
 		easemobim.noteBtn = utils.$Dom('em-widgetNote');
 		easemobim.dragHeader = utils.$Dom('em-widgetDrag');
-		easemobim.dragBar = easemobim.dragHeader.getElementsByTagName('p')[0];
+		easemobim.dragBar = easemobim.dragHeader.querySelector('.drag-bar');
 		easemobim.chatFaceWrapper = utils.$Dom('EasemobKefuWebimFaceWrapper');
-		easemobim.avatar = utils.$Class('img.em-widgetHeader-portrait')[0];
+		easemobim.avatar = document.querySelector('.em-widgetHeader-portrait');
 		easemobim.swfupload = null;//flash 上传
 
 
@@ -21101,12 +21130,22 @@ easemobim.liveStreaming = (function(){
 				if (me.readyHandled) return;
 				me.readyHandled = true;
 
+				// bug fix:
+				// minimum = fales 时, 或者 访客回呼模式 调用easemobim.bind时显示问题
+				if(config.minimum === false || config.eventCollector === true){
+					transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
+				}
 				if ( info && config.user ) {
 					config.user.token = config.user.token || info.accessToken;
 				}
 
 				easemobim.leaveMessage && easemobim.leaveMessage.auth(me.token, config);
 
+				// 发送用于回呼访客的命令消息
+				if(this.cachedCommandMessage){
+					me.sendTextMsg('', false, this.cachedCommandMessage);
+					this.cachedCommandMessage = null;
+				}
 				if ( utils.isTop ) {
                     //get ext
                     if(config.ext){
@@ -21167,7 +21206,7 @@ easemobim.liveStreaming = (function(){
 				//set tenant logo
 				this.setLogo();
 				// init live streaming
-				utils.isMobile && easemobim.liveStreaming.init(this, this.channel.send, config);
+				// utils.isMobile && easemobim.liveStreaming.init(this, this.channel.send, config);
 				//mobile set textarea can growing with inputing
 				utils.isMobile && this.initAutoGrow();
 				this.chatWrapper.getAttribute('data-getted') || config.newuser || this.getHistory();
@@ -21405,11 +21444,22 @@ easemobim.liveStreaming = (function(){
 				return null;
 			}
 			, startToGetAgentStatus: function () {
+				var me = this;
+
+				if ( config.agentStatusTimer ) return;
+
+				// start to poll
+				config.agentStatusTimer = setInterval(function() {
+					me.updateAgentStatus();
+				}, 5000);
 			}
 			, stopGettingAgentStatus: function () {
+				config.agentStatusTimer = clearInterval(config.agentStatusTimer);
 			}
 			, clearAgentStatus: function () {
-				doms.agentStatusSymbol.className = 'em-hide';
+				// benz patch:
+				// block status symbol
+				// doms.agentStatusSymbol.className = 'em-hide';
 				doms.agentStatusText.innerText = '';
 			}
 			, updateAgentStatus: function () {
@@ -21434,15 +21484,48 @@ easemobim.liveStreaming = (function(){
 					if ( msg && msg.data && msg.data.state ) {
 						state = msg.data.state;
 						doms.agentStatusText.innerText = _const.agentStatusText[state];
-						doms.agentStatusSymbol.className = 'em-widget-agent-status ' + _const.agentStatusClassName[state];
+						// benz patch:
+						// block status symbol
+						// doms.agentStatusSymbol.className = 'em-widget-agent-status ' + _const.agentStatusClassName[state];
 					}
 				});
+			}
+			, setAgentProfile: function ( info ) {
+
+				// benz patch:
+				// 企业logo 和 企业昵称直接用一张图片
+				// 坐席昵称 和 头像保持不变
+				var avatarImg = info.avatar
+					? utils.getAvatarsFullPath(info.avatar, config.domain)
+					: config.tenantAvatar || config.defaultAvatar;
+
+				//更新企业头像和名称
+				if (info.tenantName) {
+					utils.removeClass(document.querySelector('.benz-logo-with-text'), 'hide');
+					utils.addClass(easemobim.avatar, 'hide');
+					utils.addClass(doms.nickname, 'hide');
+					utils.addClass(doms.agentStatusText, 'hide');
+				}
+				else if (
+					info.userNickname
+					&& config.nickNameOption
+					&& '调度员' !== info.userNickname
+				){
+					utils.addClass(document.querySelector('.benz-logo-with-text'), 'hide');
+					utils.removeClass(easemobim.avatar, 'hide');
+					utils.removeClass(doms.nickname, 'hide');
+					utils.removeClass(doms.agentStatusText, 'hide');
+					doms.nickname.innerText = info.userNickname;
+					this.currentAvatar = avatarImg;
+					avatarImg && easemobim.avatar.setAttribute('src', avatarImg);
+				}
+				else {}
 			}
 			, setLogo: function () {
 				// 为了保证消息插入位置正确
 				if (config.logo) {
-					this.chatWrapper.querySelector('.em-widget-tenant-logo').style.display = 'block';
-					this.chatWrapper.querySelector('.em-widget-tenant-logo img').src = config.logo;
+					utils.removeClass(document.querySelector('.em-widget-tenant-logo'), 'hide');
+					document.querySelector('.em-widget-tenant-logo img').src = config.logo;
 				}
 			}
 			, setNotice: function () {
@@ -21718,21 +21801,29 @@ easemobim.liveStreaming = (function(){
 					}
 				);
 				
-				!utils.isMobile && !utils.isTop && utils.on(easemobim.imBtn, utils.click, function () {
-					transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
-				});
+				if(!utils.isTop){
+					// 最小化
+					utils.on(document.querySelector('.em-widgetHeader-min'), 'click', function () {
+						transfer.send(easemobim.EVENTS.CLOSE, window.transfer.to);
+					});
+
+					utils.on(easemobim.imBtn, utils.click, function () {
+						transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
+					});
+
+					utils.on(document, 'mouseover', function () {
+						transfer.send(easemobim.EVENTS.RECOVERY, window.transfer.to);
+					});
+				}
 				utils.on(easemobim.imChatBody, utils.click, function () {
 					easemobim.textarea.blur();
 					return false;
-				});
-				utils.on(document, 'mouseover', function () {
-					utils.isTop || transfer.send(easemobim.EVENTS.RECOVERY, window.transfer.to);
 				});
 				utils.live('img.em-widget-imgview', 'click', function () {
 					easemobim.imgView.show(this.getAttribute('src'));
 				});
 
-				if (config.dragenable && !utils.isMobile && !utils.isTop) {//drag
+				if (config.dragenable && !utils.isTop) {
 					
 					easemobim.dragBar.style.cursor = 'move';
 
@@ -21808,33 +21899,33 @@ easemobim.liveStreaming = (function(){
 				});
 
 				utils.live('button.js_robotTransferBtn', utils.click,  function () {
-					var that = this;
+					if ( this.clicked ) { return false; }
 
-					if ( that.clicked ) { return false; }
-
-					that.clicked = true;
-					me.transferToKf(that.getAttribute('data-id'), that.getAttribute('data-sessionid'));
+					this.clicked = true;
+					me.transferToKf(this.getAttribute('data-id'), this.getAttribute('data-sessionid'));
 					return false;
 				});
 
 				//机器人列表
 				utils.live('button.js_robotbtn', utils.click, function () {
-					var that = this;
-
-					me.sendTextMsg(utils.html(that), null, {
-						msgtype: {
-							choice: { menuid: that.getAttribute('data-id') }
+					me.sendTextMsg(utils.html(this), null, {ext:
+						{
+							msgtype: {
+								choice: {
+									menuid: this.getAttribute('data-id')
+								}
+							}
 						}
 					});
 					return false;
 				});
 				
-				var handleSendBtn = function () {
-					if ( !me.readyHandled ) {
-						utils.addClass(easemobim.sendBtn, 'disabled');
-						return false;
-					}
-					utils.toggleClass(easemobim.sendBtn, 'disabled', !easemobim.textarea.value);
+				function handleSendBtn(){
+					utils.toggleClass(
+						easemobim.sendBtn,
+						'disabled',
+						!me.readyHandled || !easemobim.textarea.value
+					);
 				};
 
 				utils.on(easemobim.textarea, 'keyup', handleSendBtn);
@@ -21897,18 +21988,11 @@ easemobim.liveStreaming = (function(){
 					easemobim.leaveMessage.show();
 				});
 
-				// 最小化
-				utils.on(document.querySelector('.em-widgetHeader-min'), 'click', function () {
-					transfer.send(easemobim.EVENTS.CLOSE, window.transfer.to);
-					return false;
-				});
-
 				//hot key
 				utils.on(easemobim.textarea, 'keydown', function ( evt ) {
 					if(evt.keyCode !== 13) return;
 
 					if(utils.isMobile || evt.ctrlKey || evt.shiftKey){
-						this.value += '\n';
 						return false;
 					}
 					else{
@@ -21920,8 +22004,8 @@ easemobim.liveStreaming = (function(){
 
 						// 可能是事件绑定得太多了，导致换行清不掉，稍后解决
 						setTimeout(function(){
-							this.value = '';
-						}.bind(this), 0);
+							easemobim.textarea.value = '';
+						}, 0);
 					}
 				});
 
@@ -21976,6 +22060,10 @@ easemobim.liveStreaming = (function(){
 						this.startToGetAgentStatus();
 					}
 
+					this.setAgentProfile({
+						userNickname: info.userNickname,
+						avatar: info.avatar
+					});
 				} else if ( action === 'create' ) {//显示会话创建
 					this.appendEventMsg(_const.eventMessageText.CREATE);
 				} else if ( action === 'close' ) {//显示会话关闭
@@ -21999,9 +22087,14 @@ easemobim.liveStreaming = (function(){
 
 				config.agentUserId = info.userId;
 
-				// this.updateAgentStatus();
+				this.updateAgentStatus();
 				this.startToGetAgentStatus();
 
+				//更新头像和昵称
+				this.setAgentProfile({
+					userNickname: info.agentUserNiceName,
+					avatar: info.avatar
+				});
 			}
 			//转接中排队中等提示上屏
 			, appendEventMsg: function (msg) {
@@ -22132,16 +22225,18 @@ easemobim.liveStreaming = (function(){
 	var _polling;
 	var _callback;
 	var _config;
-	var _userId;
+	var _gid;
+	var _url;
 
 	function _reportData(userType, userId){
-		_userId = userId;
+		transfer.send({event: 'updateURL'}, window.transfer.to);
 
-		easemobim.api('reportEvent', {
+		_url && easemobim.api('reportEvent', {
 			type: 'VISIT_URL',
+			// 第一次轮询时URL还未传过来，所以使用origin
+			url: _url,
 			// for debug
-			// url: 'http://172.17.3.146',
-			url: _config.origin,
+			// url: 'http://172.17.3.86',
 			// 时间戳不传，以服务器时间为准
 			// timestamp: 0,
 			userId: {
@@ -22158,15 +22253,20 @@ easemobim.liveStreaming = (function(){
 				// 有坐席呼叫
 				case 'INIT_CALL':
 					if(_isStarted()){
+						// 回呼游客，游客身份变为访客
+						if (data.userName){
+							_gid = data.orgName + '#' + data.appName + '_' + data.userName;
+							_polling.stop();
+							_polling = new Polling(function(){
+								_reportData('VISITOR', _gid);
+							}, POLLING_INTERVAL);
+						}
 						_stopReporting();
 						_callback(data);
 					}
 					// 已停止轮询 （被呼叫的访客/游客 已经创建会话），不回呼
-					// todo: 发送删除事件
-					else{}
-					// todo:
+					else {}
 					break;
-				// error: unexcepted return value
 				default:
 					break;
 			}
@@ -22174,21 +22274,28 @@ easemobim.liveStreaming = (function(){
 	}
 
 	function _deleteEvent(){
-		api('deleteEvent', {userId: _userId});
-		_userId = '';
+		_gid && api('deleteEvent', {userId: _gid});
+		// _gid = '';
 	}
 
 	function _startToReoprt(config, callback){
 		_callback || (_callback = callback);
 		_config || (_config = config);
 
+		// h5 方式屏蔽访客回呼功能
+		if(utils.isTop) return;
+
+		// 要求外部页面更新URL
+		transfer.send({event: 'updateURL'}, window.transfer.to);
+
 		// 用户点击联系客服弹出的窗口，结束会话后调用的startToReport没有传入参数
-		if(!config){
+		if(!_config){
 			console.log('not config yet.');
-			return;
 		}
-		// todo close的时候也传入user信息，待确认
-		if(_config.user.username){
+		else if(_polling){
+			_polling.start();
+		}
+		else if(_config.user.username){
 			_reportVisitor(_config.user.username);
 		}
 		else{
@@ -22197,47 +22304,65 @@ easemobim.liveStreaming = (function(){
 	}
 
 	function _reportGuest(){
-		var guestId = localStorage.getItem('guestId') || utils.uuid();
+		var guestId = _config.guestId || utils.uuid();
 
+		// 缓存guestId
 		transfer.send({event: 'setItem', data: {
 			key: 'guestId',
 			value: guestId
 		}}, window.transfer.to);
+
 		_polling = new Polling(function(){
 			_reportData('GUEST', guestId);
 		}, POLLING_INTERVAL);
 
-		_startToPoll();
+		_polling.start();
 	}
 
 	function _reportVisitor(username){
+		// 获取关联信息
 		api('getRelevanceList', {
 			tenantId: _config.tenantId
 		}, function(msg) {
 			if (!msg.data.length) {
 				throw '未创建关联';
 			}
+			var splited = _config.appKey.split('#');
 			var relevanceList = msg.data[0];
-			var orgName = relevanceList.orgName;
-			var appName = relevanceList.appName;
+			var orgName = splited[0] || relevanceList.orgName;
+			var appName = splited[1] || relevanceList.appName;
 			var imServiceNumber = relevanceList.imServiceNumber;
-			var gid = orgName + '#' + appName + '_' + username;
+
+			_config.restServer = _config.restServer || relevanceList.restDomain;
+			var cluster = _config.restServer ? _config.restServer.match(/vip\d/) : '';
+			cluster = cluster && cluster.length ? '-' + cluster[0] : '';
+			_config.xmppServer = _config.xmppServer || 'im-api' + cluster + '.easemob.com';
+
+			_gid = orgName + '#' + appName + '_' + username;
 
 			_polling = new Polling(function(){
-				_reportData('VISITOR', gid);
+				_reportData('VISITOR', _gid);
 			}, POLLING_INTERVAL);
 
-			_startToPoll();
+			// 获取当前会话信息
+			api('getCurrentServiceSession', {
+				tenantId: _config.tenantId,
+				orgName: orgName,
+				appName: appName,
+				imServiceNumber: imServiceNumber,
+				id: username
+			}, function(msg){
+				// 没有会话数据，则开始轮询
+				if(!msg.data){
+					_polling.start();
+				}
+			});
 		});
 	}
 
 	function _stopReporting(){
 		_polling && _polling.stop();
-		_userId && _deleteEvent();
-	}
-
-	function _startToPoll(){
-		_polling && _polling.start();
+		_deleteEvent();
 	}
 
 	function _isStarted() {
@@ -22247,7 +22372,10 @@ easemobim.liveStreaming = (function(){
 	easemobim.eventCollector = {
 		startToReport: _startToReoprt,
 		stopReporting: _stopReporting,
-		isStarted: _isStarted
+		isStarted: _isStarted,
+		updateURL: function(url){
+			_url = url;
+		}
 	};
 }(
 	easemobim.Polling,
@@ -22255,8 +22383,7 @@ easemobim.liveStreaming = (function(){
 	easemobim.api
 ));
 
-;
-(function(window, undefined) {
+;(function(window, undefined) {
 	'use strict';
 
 	var utils = easemobim.utils;
@@ -22264,13 +22391,14 @@ easemobim.liveStreaming = (function(){
 	var eventCollector = easemobim.eventCollector;
 	var chat;
 	var afterChatReady;
+	var config;
 
 	getConfig();
 
 	function getConfig() {
 		if (utils.isTop) {
 			var tenantId = utils.query('tenantId');
-			var config = {};
+			config = {};
 			//get config from referrer's config
 			try {
 				config = JSON.parse(utils.code.decode(utils.getStore('emconfig' + tenantId)));
@@ -22331,28 +22459,39 @@ easemobim.liveStreaming = (function(){
 			initUI(config, initAfterUI);
 		} else {
 			window.transfer = new easemobim.Transfer(null, 'main').listen(function(msg) {
-				if (msg.parentId) {
-					chat = easemobim.chat(msg);
-					window.transfer.to = msg.parentId;
-					initUI(msg, initAfterUI);
-				}
-				else if (msg.event) {
-					switch (msg.event) {
-						case easemobim.EVENTS.SHOW.event:
+				switch (msg.event) {
+					case easemobim.EVENTS.SHOW.event:
+						if(eventCollector.isStarted()){
+							// 停止上报访客
+							eventCollector.stopReporting();
+							chatEntry.init(config);
 							chatEntry.open();
-							break;
-						case easemobim.EVENTS.CLOSE.event:
-							chatEntry.close();
-							break;
-						case easemobim.EVENTS.EXT.event:
-							chat.sendTextMsg('', false, msg.data.ext);
-							break;
-						case easemobim.EVENTS.TEXTMSG.event:
-							chat.sendTextMsg(msg.data.data, false, msg.data.ext);
-							break;
-						default:
-							break;
-					}
+						}
+						else{
+							chatEntry.open();
+						}
+						break;
+					case easemobim.EVENTS.CLOSE.event:
+						chatEntry.close();
+						break;
+					case easemobim.EVENTS.EXT.event:
+						chat.sendTextMsg('', false, msg.data.ext);
+						break;
+					case easemobim.EVENTS.TEXTMSG.event:
+						chat.sendTextMsg(msg.data.data, false, msg.data.ext);
+						break;
+					case 'updateURL':
+						easemobim.eventCollector.updateURL(msg.data);
+						break;
+					case 'initConfig':
+						chat = easemobim.chat(msg.data);
+						window.transfer.to = msg.data.parentId;
+						initUI(msg.data, initAfterUI);
+						// cache config
+						config = msg.data;
+						break;
+					default:
+						break;
 				}
 			}, ['easemob']);
 		}
@@ -22373,7 +22512,11 @@ easemobim.liveStreaming = (function(){
 			eventCollector.startToReport(config, function(targetUserInfo) {
 				chatEntry.init(config, targetUserInfo);
 			});
-			// config.hide = true;
+			// 增加访客主动联系客服逻辑
+			utils.one(easemobim.imBtn, 'click', function(){
+				chatEntry.init(config);
+				chatEntry.open();
+			});
 		}
 		else {
 			// 获取关联，创建访客，调用聊天窗口
@@ -22384,7 +22527,7 @@ easemobim.liveStreaming = (function(){
 	function initUI(config, callback) {
 		var iframe = document.getElementById('EasemobKefuWebimIframe');
 
-		iframe.src = config.domain + '/webim/transfer.html?v=benz.43.11.005';
+		iframe.src = config.domain + '/webim/transfer.html?v=benz.43.12.002.02';
 		utils.on(iframe, 'load', function() {
 			easemobim.getData = new easemobim.Transfer('EasemobKefuWebimIframe', 'data');
 			callback(config);
@@ -22400,30 +22543,24 @@ easemobim.liveStreaming = (function(){
 		// em-kefu-webim-chat
 		utils.toggleClass(
 			utils.$Dom('em-kefu-webim-chat'),
-			'em-hide', !(utils.isTop || !config.minimum)
+			'em-hide',
+			!(utils.isTop || !config.minimum)
 		);
 
-		// 联系客服按钮
-		var $button = utils.$Class('a.em-widget-pop-bar')[0];
+		// 设置联系客服按钮文字
+		document.querySelector('.em-widget-pop-bar').innerText = config.buttonText;
 
-		// 设置按钮文字
-		$button.innerText = config.buttonText;
-
-		// mobile
+		// 添加移动端样式类
 		if (utils.isMobile) {
-			// 联系客服按钮改为弹窗
-			$button.href = location.href;
-			$button.target = '_blank';
-			// 添加移动端样式类
 			utils.addClass(document.body, 'em-mobile');
 		}
 
 		// 留言按钮
-		utils.toggleClass(
-			utils.$Dom('em-widgetNote'),
-			'em-hide',
-			!config.ticket
-		);
+		// utils.toggleClass(
+		// 	utils.$Dom('em-widgetNote'),
+		// 	'em-hide',
+		// 	!config.ticket
+		// );
 
 		// 最小化按钮
 		utils.toggleClass(
@@ -22503,7 +22640,6 @@ easemobim.liveStreaming = (function(){
 				config.channelid = config.channelid || msg.data[0].channelId;
 				config.appKey = config.appKey || config.orgName + '#' + config.appName;
 				config.restServer = config.restServer || msg.data[0].restDomain;
-
 				var cluster = config.restServer ? config.restServer.match(/vip\d/) : '';
 				cluster = cluster && cluster.length ? '-' + cluster[0] : '';
 				config.xmppServer = config.xmppServer || 'im-api' + cluster + '.easemob.com';
@@ -22520,10 +22656,10 @@ easemobim.liveStreaming = (function(){
 							password: targetUserInfo.userPassword
 						};
 
+						// 发送空的ext消息，延迟发送
+						chat.cachedCommandMessage = {ext: {weichat: {agentUsername: targetUserInfo.agentUserName}}};
 						chat.ready();
 						chat.show();
-						// 发送空的ext消息
-						chat.sendTextMsg('', false, {ext: {weichat: {agentUsername: targetUserInfo.agentUserName}}});
 						transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
 						transfer.send({
 							event: 'setUser',
@@ -22544,10 +22680,10 @@ easemobim.liveStreaming = (function(){
 							} else {
 								config.user.password = msg.data;
 
+								// 发送空的ext消息，延迟发送
+								chat.cachedCommandMessage = {ext: {weichat: {agentUsername: targetUserInfo.agentUserName}}};
 								chat.ready();
 								chat.show();
-								// 发送空的ext消息
-								chat.sendTextMsg('', false, {ext: {weichat: {agentUsername: targetUserInfo.agentUserName}}});
 								transfer.send(easemobim.EVENTS.SHOW, window.transfer.to);
 							}
 						});
@@ -22642,15 +22778,10 @@ easemobim.liveStreaming = (function(){
 			});
 		},
 		open: function() {
-			// config.toUser = config.toUser || config.to;
-			// 停止上报访客
-			eventCollector.stopReporting();
 			chat.show();
 		},
 		close: function() {
 			chat.close();
-			// eventCollector.startToReport();
-			// todo 重新上报访客开始
 		}
 	};
 
