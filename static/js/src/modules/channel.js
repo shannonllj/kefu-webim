@@ -343,18 +343,20 @@ easemobim.channel = function ( config ) {
 			if (!isHistory){
 				// 实时消息需要处理事件
 				switch(utils.getDataByPath(msg, 'ext.weichat.event.eventName')){
-					case 'ServiceSessionTransferedEvent':
 					// 转接到客服
+					case 'ServiceSessionTransferedEvent':
 						me.handleEventStatus('transferd', msg.ext.weichat.event.eventObj);
 						break;
-					case 'ServiceSessionTransferedToAgentQueueEvent':
 					// 转人工或者转到技能组
+					case 'ServiceSessionTransferedToAgentQueueEvent':
+						me.waitListNumber.start();
 						me.handleEventStatus('transfering', msg.ext.weichat.event.eventObj);
 						break;
 					// 会话结束
 					case 'ServiceSessionClosedEvent':
 					// todo: use promise to opt this code
-						me.hasSentAttribute = false;
+						// 为什么在这里停止轮询？
+						me.waitListNumber.stop();
 						config.agentUserId = null;
 						me.stopGettingAgentStatus();
 						// 还原企业头像和企业名称
@@ -364,9 +366,12 @@ easemobim.channel = function ( config ) {
 						me.handleEventStatus('close');
 						!utils.isTop && transfer.send({event: _const.EVENTS.ONSESSIONCLOSED}, window.transfer.to);
 						break;
+					// 会话打开
 					case 'ServiceSessionOpenedEvent':
 						// fake: 会话接起就认为有坐席在线
 						me.hasAgentOnline = true;
+						// 停止轮询当前排队人数
+						me.waitListNumber.stop();
 						me.handleEventStatus('linked', msg.ext.weichat.event.eventObj);
 						if (!me.hasSentAttribute) {
 							api('getExSession', {
@@ -380,8 +385,10 @@ easemobim.channel = function ( config ) {
 							});
 						}	
 						break;
+					// 会话创建
 					case 'ServiceSessionCreatedEvent':
 						me.handleEventStatus('create');
+						me.waitListNumber.start();
 						if (!me.hasSentAttribute) {
 							api('getExSession', {
 								id: config.user.username
