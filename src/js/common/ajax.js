@@ -1,52 +1,60 @@
-;(function () {
-	var EMPTYFN = function () {};
+(function () {
+	window.easemobim = window.easemobim || {};
+	window.easemobim.emajax = emajax;
 
-	var _createStandardXHR = function () {
+	function EMPTYFN() {}
+
+	function _createStandardXHR() {
 		try {
 			return new window.XMLHttpRequest();
-		} catch( e ) {
+		}
+		catch (e) {
 			return false;
 		}
-	};
-	
-	var _createActiveXHR = function () {
-		try {
-			return new window.ActiveXObject( "Microsoft.XMLHTTP" );
-		} catch( e ) {
-			return false;
-		}
-	};
+	}
 
-	var emajax = function ( options ) {
+	function _createActiveXHR() {
+		try {
+			return new window.ActiveXObject("Microsoft.XMLHTTP");
+		}
+		catch (e) {
+			return false;
+		}
+	}
+
+	function emajax(options) {
 		var dataType = options.dataType || 'text';
 		var suc = options.success || EMPTYFN;
 		var error = options.error || EMPTYFN;
-		var xhr = _createStandardXHR () || _createActiveXHR();
+		var xhr = _createStandardXHR() || _createActiveXHR();
 		xhr.onreadystatechange = function () {
 			var json;
-			if( xhr.readyState === 4 ){
+			if (xhr.readyState === 4) {
 				var status = xhr.status || 0;
-				if ( status === 200 ) {
-					if ( dataType === 'text' ) {
+				if (status === 200) {
+					if (dataType === 'text') {
 						suc(xhr.responseText, xhr);
 						return;
 					}
-					if ( dataType === 'json' ) {
+					if (dataType === 'json') {
 						try {
 							json = JSON.parse(xhr.responseText);
-							suc(json,xhr);
-						} catch ( e ) {}
+							suc(json, xhr);
+						}
+						catch (e) {}
 						return;
 					}
-					suc(xhr.response || xhr.responseText,xhr);
+					suc(xhr.response || xhr.responseText, xhr);
 					return;
-				} else {
-					if ( dataType=='json'){
-						try{
+				}
+				else {
+					if (dataType == 'json') {
+						try {
 							json = JSON.parse(xhr.responseText);
 							error(json, xhr, '服务器返回错误信息');
-						} catch ( e ) {
-							error(xhr.responseText,xhr, '服务器返回错误信息');
+						}
+						catch (e) {
+							error(xhr.responseText, xhr, '服务器返回错误信息');
 						}
 						return;
 					}
@@ -54,44 +62,44 @@
 					return;
 				}
 			}
-			if( xhr.readyState === 0 ) {
+			if (xhr.readyState === 0) {
 				error(xhr.responseText, xhr, '服务器异常');
 			}
 		};
 
-		var type = options.type || 'GET',
-			data = options.data || {},
-			tempData = '';
+		var type = options.type || 'GET';
+		var data = options.data || {};
+		var tempData = '';
 
-		if ( type.toLowerCase() === 'get' ) {
-			for ( var o in data ) {
-				if ( data.hasOwnProperty(o) ) {
+		if (type.toLowerCase() === 'get') {
+			for (var o in data) {
+				if (data.hasOwnProperty(o)) {
 					tempData += o + '=' + data[o] + '&';
 				}
 			}
 			tempData = tempData ? tempData.slice(0, -1) : tempData;
-			options.url += (options.url.indexOf('?') > 0 ? '&' : '?') + (tempData ? tempData + '&' : tempData) + '_v=' + new Date().getTime();
+			options.url += (options.url.indexOf('?') > 0 ? '&' : '?') + (tempData ? tempData + '&' : tempData) + '_v=' + new Date()
+				.getTime();
 			data = null;
-		} else {
+		}
+		else {
 			data._v = new Date().getTime();
 			data = JSON.stringify(data);
 		}
 		xhr.open(type, options.url);
-		if ( xhr.setRequestHeader ) {
+		if (xhr.setRequestHeader) {
 
 			var headers = options.headers || {};
 
 			headers['Content-Type'] = headers['Content-Type'] || 'application/json';
 
-			for ( var key in headers ) {
-				if ( headers.hasOwnProperty(key) ) {
+			for (var key in headers) {
+				if (headers.hasOwnProperty(key)) {
 					xhr.setRequestHeader(key, headers[key]);
 				}
 			}
 		}
 		xhr.send(data);
 		return xhr;
-	};
-	window.easemobim = window.easemobim || {};
-	window.easemobim.emajax = emajax;
+	}
 }());
