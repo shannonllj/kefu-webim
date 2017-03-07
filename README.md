@@ -9,7 +9,7 @@
 1. 安装nodejs
 具体请参考 [nodejs.org](https://nodejs.org/)
 
-2. 在终端执行以下命令，全局安装命令一般需要使用root权限运行
+2. 在终端执行以下命令，全局安装命令一般需要使用root权限运行 
 	- 安装cnpm (此步骤仅为了加速相关依赖包的安装速度)
 
 		>	$ npm install -g cnpm --registry=https://registry.npm.taobao.org
