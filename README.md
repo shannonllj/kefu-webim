@@ -40,7 +40,7 @@
 		>	$ node app -t kefu.easemob.com -p 8080
 	- 此时可以用浏览器打开 `http://localhost:8080/webim/demo.html`
 
-## 其他命令可以查看帮助
+## 其他命令可以查看帮助：
 
 	$ cd kefu-webim
 	$ node server/app -h
